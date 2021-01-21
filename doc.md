@@ -71,12 +71,12 @@ We need to show the criteria above for all plaintext distributions $P_X$. Theref
     \includegraphics[width=\linewidth]{img/perfect_secrecy_example}
 \end{minipage}
 \begin{minipage}{.63\linewidth}
-    \begin{align}
+    \begin{align*}
         P(a | A) &= \frac{P(a, A)}{P(A)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
         P(a | B) &= \frac{P(a, B)}{P(B)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
         P(b | A) &= \frac{P(b, A)}{P(A)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)\\
         P(b | B) &= \frac{P(b, B)}{P(B)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)
-    \end{align}
+    \end{align*}
 \end{minipage}
 \newline
 
@@ -86,10 +86,10 @@ Let $S = (X,K,Y,e,d)$ be a cryptosystem providing perfect secrecy, then it holds
 
 **Shannons Theorem**:
 
-Let $V = S[P_k] be a cryptosystem with key distribution $P_K$ and $|K| = |Y| = |X|$. The system provides perfect secrecy if and only if
+Let $V = S[P_k]$ be a cryptosystem with key distribution $P_K$ and $|K| = |Y| = |X|$. The system provides perfect secrecy if and only if
 
 1. $P_K$ is a uniform distribution
-2. $\forall x \in X, y \in Y \exists k \in K with e(x, k) = y$ (There must be a key for every plaintext/ciphertext pair)
+2. $\forall x \in X, y \in Y \exists k \in K \text{ with } e(x, k) = y$ (There must be a key for every plaintext/ciphertext pair)
 
 ## Scenario 2 
 
@@ -107,20 +107,16 @@ Also with 1 plaintext-ciphertext pair (CPA), the key can be calculated as $k = x
 Let $X$ be a non-empty finite set. A substitution cryptosystem over X is a tuple $(X, P_X, X, e, d)$ where $P_X$ is the set of all permutations of $X$.
 $$e(x, \pi) = \pi(x) \quad d(y, \pi) = \pi^{-1}(y) \quad \forall x,y \in X, \pi \in P_X$$
 
-Substitution cryptosystems provide "perfect security" in scenario 2, BUT they are impractical because the permutation table ($\pi$) has a size of $2^l * l$.
+Substitution cryptosystems provide "perfect security" in scenario 2, BUT they are impractical because the substitution table ($\pi$) has a size of $2^l * l$.
 
 Therefore, we need a weaker security definition that takes into account, that attackers are resource bound.
 
 ### l-Block Cipher
 
 Let $l : \mathbb{N} \rightarrow \mathbb{N}$ be a polynomial. An l-block cipher $B$ is a cryptosystem of the form 
-$$\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; E,\; D \bigg)$$
 
-\begin{center}
-or simplified:
-\end{center}
+$\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; E,\; D \bigg)$ or simplified: $\bigg(\{0,1\}^l,\; Gen(1^\eta),\; \{0,1\}^l,\; E,\; D \bigg)$
 
-$$\bigg(\{0,1\}^l,\; Gen(1^\eta),\; \{0,1\}^l,\; E,\; D \bigg)$$
 
 ### Substitution-Permutation Cryptosystem (SPCS)
 
@@ -153,4 +149,25 @@ $$\bigg(\{0,1\}^l,\; Gen(1^\eta),\; \{0,1\}^l,\; E,\; D \bigg)$$
 
 **AES (Advanced encryption standard)**: basically SPCS with modifications
 
+### Algorithmic Security of Block Ciphers
 
+\Begin{minipage}{.55\linewidth}
+
+We consider a block cipher secure if it is almost as good as a substitution cryptosystem w.r.t. resource-bound adversaries.
+Therefore an adversary $U$ has to be able to distinguish BCS and SCS. Formally, we use the BCS for $b=1$ (real world) and the SCS for $b=0$ (random world) in the security game.
+
+The winning probability is $Pr[E(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is introduced to normalize.
+
+\End{minipage}\hfill
+\Begin{minipage}{.4\linewidth}
+
+![](img/BC_SG.png)
+
+\End{minipage}
+
+\begin{align*}
+    Adv_{U, B}(\eta) &= 2 * \bigg( Pr[E_U^B(1^\eta) = 1] - \frac{1}{2} \bigg) \in [-1, 1]
+    &suc_{U, B}(\eta) = Pr[S_U^B\langle b=1\rangle (1^\eta) = 1]\\
+    Adv_{U, B}(\eta) &= suc_{U, B}(\eta) - fail_{U, B}(\eta)
+    &fail_{U, B}(\eta) = Pr[S_U^B\langle b=0\rangle (1^\eta) = 1]  
+\end{align*}
