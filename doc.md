@@ -38,7 +38,7 @@ header-includes: |
 
 ### Cryptosystems
 
-A cryptosystem is a tuple $S = (X, K, Y, e, d)$ with
+A cryptosystem is a tuple $\mathcal{S} = (X, K, Y, e, d)$ with
 
 - X: set of plaintexts
 - K: finite set of keys
@@ -61,7 +61,7 @@ A vernam system of length $l>0$ provides perfect secrecy for every uniform $P_K$
 
 ### Perfect Secrecy
 
-A cryptosystem with key distribution $V = S[P_k]$  provides perfect secrecy if for all plaintext distributions $P_X$, the probability of every plaintext remains the same, i.e.: $$P(x) = P(x | y) \quad \forall x \in X, y \in Y, P(y) > 0$$
+A cryptosystem with key distribution $\mathcal{V} = \mathcal{S}[P_k]$  provides perfect secrecy if for all plaintext distributions $P_X$, the probability of every plaintext remains the same, i.e.: $$P(x) = P(x | y) \quad \forall x \in X, y \in Y, P(y) > 0$$
 
 **Example Proof**:
 
@@ -82,11 +82,11 @@ We need to show the criteria above for all plaintext distributions $P_X$. Theref
 
 **Theorem**: 
 
-Let $S = (X,K,Y,e,d)$ be a cryptosystem providing perfect secrecy, then it holds $|K| \geq |Y| \geq |X|$.
+Let $\mathcal{S} = (X,K,Y,e,d)$ be a cryptosystem providing perfect secrecy, then it holds $|K| \geq |Y| \geq |X|$.
 
 **Shannons Theorem**:
 
-Let $V = S[P_k]$ be a cryptosystem with key distribution $P_K$ and $|K| = |Y| = |X|$. The system provides perfect secrecy if and only if
+Let $\mathcal{V} = \mathcal{S}[P_k]$ be a cryptosystem with key distribution $P_K$ and $|K| = |Y| = |X|$. The system provides perfect secrecy if and only if
 
 1. $P_K$ is a uniform distribution
 2. $\forall x \in X, y \in Y \exists k \in K \text{ with } e(x, k) = y$ (There must be a key for every plaintext/ciphertext pair)
@@ -124,7 +124,7 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 
 - plaintexts are split into $m$ words with length $n$ with $l = m*n$, $x^{(i)}$ denotes the $i$'th word
 - $[r] = \{0, 1, ..., r-1\}$
-- $\beta \in P_{[l]}$, then $x^\beta(i) = x(\beta(i))$
+- $\beta \in \mathcal{P}_{[l]}$, then $x^\beta(i) = x(\beta(i))$
 
 **General Principle**: Over $r$ rounds, (round) key additions, word substitutions and bit permutations are applied, including an initial step that just applies key addition and shortened last round without bit permutation.
 
@@ -156,7 +156,7 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 We consider a block cipher secure if it is almost as good as a substitution cryptosystem w.r.t. resource-bound adversaries.
 Therefore an adversary $U$ has to be able to distinguish BCS and SCS. Formally, we use the BCS for $b=1$ (real world) and the SCS for $b=0$ (random world) in the security game.
 
-The winning probability is $Pr[E(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is introduced to normalize.
+The winning probability is $Pr[\mathbb{E}(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is introduced to normalize.
 
 \End{minipage}\hfill
 \Begin{minipage}{.4\linewidth}
@@ -166,8 +166,125 @@ The winning probability is $Pr[E(1^n) = 1]$. Since a random guesser already has 
 \End{minipage}
 
 \begin{align*}
-    Adv_{U, B}(\eta) &= 2 * \bigg( Pr[E_U^B(1^\eta) = 1] - \frac{1}{2} \bigg) \in [-1, 1]
-    &suc_{U, B}(\eta) = Pr[S_U^B\langle b=1\rangle (1^\eta) = 1]\\
+    Adv_{U, B}(\eta) &= 2 * \bigg( Pr[\mathbb{E}_U^B(1^\eta) = 1] - \frac{1}{2} \bigg) \in [-1, 1]
+    &suc_{U, B}(\eta) = Pr[\mathbb{S}_U^B\langle b=1\rangle (1^\eta) = 1]\\
     Adv_{U, B}(\eta) &= suc_{U, B}(\eta) - fail_{U, B}(\eta)
-    &fail_{U, B}(\eta) = Pr[S_U^B\langle b=0\rangle (1^\eta) = 1]  
+    &fail_{U, B}(\eta) = Pr[\mathbb{S}_U^B\langle b=0\rangle (1^\eta) = 1]  
 \end{align*}
+
+### PRP/PRF Switching Lemma
+
+Since substitution cryptosystems cannot be distinguished from (secure) $l$-Block cryptosystems, we can see $l$-Block cryptosystems as pseudo-random permutations (PRP). Anyway, for proving purposes, it can be easier to see them as pseudo-random functions. The PRP/PRF Switching Lemma says, that we can use them interchangeably, since the difference of advantages is negligible:
+
+Let $B$ be an $l$-block cipher and $U$ be an $l$-distinguisher with runtime bound $q(\eta)$ where q is a positive polynomial and $\eta \in 	\mathbb{N}$.
+Then the following holds true:
+
+$$|Adv^{PRP}_{U,B}(\eta) - Adv^{PRF}_{U,B}(\eta)| \leq \frac{q(\eta)^2}{2^{l(\eta)+1}}$$
+
+## Scenario 3
+
+**Arbitrary messages with any length (possibly with repetition)**
+
+### Symmetric Encryption Scheme
+
+A symmetric encryption scheme is a tuple $S = (Gen(^\eta), E, D)$ with 
+
+- security parameter $\eta$
+- ppt key generation algorithm $Gen(1^\eta)$
+- ppt encryption algorithm $E(x: \{0, 1\}^*, k: K) : \{0,1\}^*$ 
+- dpt decryption algorithm $D(y: \{0,1\}^*, k: K) : \{0,1\}^*$  
+- and $D(E(x, k), k) = x$
+
+E cannot be deterministic, because else we wouldn't be able to send the same message multiple times, i.e. the same plaintext encrypted under the same key should result in a different ciphertext (with a high probability).
+
+### Encryption Schemes from Stream Ciphers
+
+**Idea**: Vernam is safe if we use every key just once. So using the key as seed of a random number generator, that generates a stream of random numbers, enables the usage of the vernam system for arbitrarily long messages.
+
+#### Number generator
+
+A number generator (NG) is a dpt algorithm of the Form $G : (s: \{0,1\}^\eta) : \{0,1\}^{p(\eta)}$ where $p$ is the expansion factor.
+
+#### PRNG-Distinguisher
+
+TODO
+
+### Encryption Schemes from Block Ciphers
+
+#### ECB Mode
+
+**Idea**: Split the message in blocks of constant length and encrypt each block under the given key using the underlying block cipher.
+
+\includegraphics[width=\linewidth]{img/ecb-mode}
+
+**Security**: It's not secure, since the ciphertext carries non-trivial information about the plaintext: $\text{for } y = y_0 || y_1\text{, then } y_0 = y_1 \text{ if } x_0 = x_1$.
+
+#### CBC Mode
+
+\Begin{minipage}{.55\linewidth}
+
+**Idea**: Add and initialization vector $v$ that is \texttt{xor}'ed with the plaintext before encrypting. That $v$ is part of the key. 
+\newline\newline
+**Problem**: Still deterministic, so every plaintext can be sent just once.
+
+\End{minipage}\hfill
+\begin{minipage}{.4\linewidth}
+    \includegraphics[width=\linewidth]{img/cbc-mode}
+\end{minipage}
+
+#### R-CBC Mode
+
+\Begin{minipage}{.55\linewidth}
+
+**Idea**: To solve the issues of CBC-Mode, R-CBC moves the initialization vector $v$ out of the key and generates a random one while decryption. The vector is appended as first block of the ciphertext to enable decryption.
+\newline\newline
+**Security**: Its secure if the underlying block cipher is secure.
+
+\End{minipage}\hfill
+\begin{minipage}{.4\linewidth}
+    \includegraphics[width=\linewidth]{img/rcbc-mode}
+\end{minipage}
+
+#### R-CTR Mode
+
+\Begin{minipage}{.55\linewidth}
+
+**Idea**: Alternative to R-CBC. Generate a random number $r$ (comparable to $v$ of R-CBC), encrypt this random number under the key and xor it with the plaintext. The counter is increased by 1 for each block. The counter $r$ is appended as first block of $y$ to enable decryption.
+\newline\newline
+**Security**: Its secure if the underlying block cipher is secure.
+
+\End{minipage}\hfill
+\begin{minipage}{.4\linewidth}
+    \includegraphics[width=\linewidth]{img/rctr-mode}
+\end{minipage}
+
+### CPA-Security
+
+\Begin{minipage}{.62\linewidth}
+
+**CPA**: Chosen-Plaintext-Attack
+\newline\newline
+**Game**: Adversary $A$ consists of finder $AF$ and guesser $AG$. The finder chooses 2 plaintexts $z_0, z_1$. One of them is encrypted. The guesser has to determine which of them is the corresponding plaintext.
+\newline\newline
+Advantage, success and failure are defined as for block ciphers.
+
+\End{minipage}\hfill
+\begin{minipage}{.35\linewidth}
+    \includegraphics[width=\linewidth]{img/cpa}
+\end{minipage}
+
+
+### CCA-Security
+
+\Begin{minipage}{.62\linewidth}
+
+**CCA**: Chosen-Ciphertext-Attack
+\newline\newline
+**Game**: In addition to the encryption oracle $H$ from the CPA-game, the adversary also gets a decryption oracle $H^{-1}$. 
+\newline\newline
+Advantage, success and failure are defined as for block ciphers.
+
+\End{minipage}\hfill
+\begin{minipage}{.35\linewidth}
+    \includegraphics[width=\linewidth]{img/cpa}
+\end{minipage}
