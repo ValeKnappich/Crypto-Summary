@@ -1,0 +1,2 @@
+1. Difference between security game and shortened version? why?
+2. Why do we only consider 2 out of 4 cases in success and failure?
