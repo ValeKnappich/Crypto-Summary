@@ -8,11 +8,7 @@ author:
 - Valentin Knappich 
 date: \today{}
 lang: en
-filter:
-- pandoc-eqnos
-latex-engine-opt: -shell-escape
 header-includes: |
-    \usepackage{placeins}
     \usepackage{graphicx}
 
     \let\Begin\begin
@@ -46,7 +42,7 @@ A cryptosystem is a tuple $\mathcal{S} = (X, K, Y, e, d)$ with
 - e: encryption function
 - d: decryption function
 
-Perfect correctness: \tab\tab $d(e(x, k), k) \forall x \in X, k \in K$
+Perfect correctness: \tab\tab $d(e(x, k), k) \quad \forall x \in X, k \in K$
 
 No unnecessary ciphertexts: \tab $Y = \{e(x,k) | x \in X, k \in K\}$ 
 
@@ -61,7 +57,7 @@ A vernam system of length $l>0$ provides perfect secrecy for every uniform $P_K$
 
 ### Perfect Secrecy
 
-A cryptosystem with key distribution $\mathcal{V} = \mathcal{S}[P_k]$  provides perfect secrecy if for all plaintext distributions $P_X$, the probability of every plaintext remains the same, i.e.: $$P(x) = P(x | y) \quad \forall x \in X, y \in Y, P(y) > 0$$
+A cryptosystem with key distribution $\mathcal{V} = \mathcal{S}[P_k]$  provides perfect secrecy if for all plaintext distributions $P_X$, the probability of every plaintext remains the same after the ciphertext is seen, i.e.: $$P(x) = P(x | y) \quad \forall x \in X, y \in Y, P(y) > 0$$
 
 **Example Proof**:
 
@@ -107,13 +103,11 @@ Also with 1 plaintext-ciphertext pair (CPA), the key can be calculated as $k = x
 Let $X$ be a non-empty finite set. A substitution cryptosystem over X is a tuple $(X, P_X, X, e, d)$ where $P_X$ is the set of all permutations of $X$.
 $$e(x, \pi) = \pi(x) \quad d(y, \pi) = \pi^{-1}(y) \quad \forall x,y \in X, \pi \in P_X$$
 
-Substitution cryptosystems provide "perfect security" in scenario 2, BUT they are impractical because the substitution table ($\pi$) has a size of $2^l * l$.
+Substitution cryptosystems provide "perfect security" in scenario 2, but they are impractical because the substitution table ($\pi$) has a size of $2^l * l$.
 
-Therefore, we need a weaker security definition that takes into account, that attackers are resource bound.
+### $l$-Block Cipher
 
-### l-Block Cipher
-
-Let $l : \mathbb{N} \rightarrow \mathbb{N}$ be a polynomial. An l-block cipher $B$ is a cryptosystem of the form 
+Let $l : \mathbb{N} \rightarrow \mathbb{N}$ be a polynomial. An $l$-block cipher $B$ is a cryptosystem of the form 
 
 $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; E,\; D \bigg)$ or simplified: $\bigg(\{0,1\}^l,\; Gen(1^\eta),\; \{0,1\}^l,\; E,\; D \bigg)$
 
@@ -145,7 +139,7 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 
 - Relies on a set $T$ of plaintext-ciphertext pairs
 - Instead of brute forcing the whole key, get small parts of the key at a time
-- TODO
+- Exploit linear dependencies
 
 **AES (Advanced encryption standard)**: basically SPCS with modifications
 
@@ -154,9 +148,9 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 \Begin{minipage}{.55\linewidth}
 
 We consider a block cipher secure if it is almost as good as a substitution cryptosystem w.r.t. resource-bound adversaries.
-Therefore an adversary $U$ has to be able to distinguish BCS and SCS. Formally, we use the BCS for $b=1$ (real world) and the SCS for $b=0$ (random world) in the security game.
+Therefore no adversary $U$ should be able to distinguish BCS and SCS. Formally, we use the BCS for $b=1$ (real world) and the SCS for $b=0$ (random world) in the security game.
 
-The winning probability is $Pr[\mathbb{E}(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is introduced to normalize.
+The winning probability is $Pr[\mathbb{E}(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is normalized.
 
 \End{minipage}\hfill
 \Begin{minipage}{.4\linewidth}
@@ -288,3 +282,117 @@ Advantage, success and failure are defined as for block ciphers.
 \begin{minipage}{.35\linewidth}
     \includegraphics[width=\linewidth]{img/cpa}
 \end{minipage}
+
+### Vaudenay's Padding Attack
+
+- TODO
+
+# Number Theory
+
+## Fundamental Theorem of Arithmetic
+
+Every natural number $n \in \mathbb{N}, n \geq 2$ has exactly one combination of prime factors.
+
+$$n = p_1 * \dots * p_k \quad \text{with} k \leq log(n)$$ 
+
+## Modulo
+
+Let $n \in \mathbb{N}\backslash \{0\}, a \in \mathbb{Z}$. Then $\exists !q \in \mathbb{Z}, r \in \{0, \dots, n-1\}$ such that $a = n*q + r$.
+
+$$a \text{ div } n := q  \quad\quad\text{and}\quad\quad a \text{ mod } n := r$$
+
+## $\mathbb{Z}_n$
+
+Let $n \geq 1$. We define the set $\mathbb{Z}_n := \{0, \dots, n-1\}$ of remainders of divisions by $n$. Let $a,b \in \mathbb{Z}_n$, then 
+
+$$a +_n b := (a + b) \text{ mod } n \quad\quad\text{and}\quad\quad a *_n b := (a * b) \text{ mod } n$$
+
+## Group
+
+A tuple $(\mathcal{G}, \cdot)$ is called group if $\mathcal{G}$ is a non-empty set and $\cdot : \mathcal{G} \times \mathcal{G} \rightarrow \mathcal{G}$ is a function such that: 
+
+- $(x \cdot y) \cdot z = x \cdot (y \cdot z) \quad\forall x,y,z \in \mathcal{G}$ \tab\tab (associativity)
+- $\exists e \in \mathcal{G} : e \cdot x = x \cdot e = x \quad \forall x \in \mathcal{G}$ \tab\tab (neutral element)
+- $\forall x \in \mathcal{G} \exists x^{-1} \in \mathcal{G} : x \cdot x^{-1} = e$ \tab\tab (inverse element)
+
+The *order* of a group is the number of elements in $\mathcal{G}$.
+
+The exponentiation is defined as usual. For a finite group $(\mathcal{G}, \cdot)$ with order $n$ and neutral element $e$, the following holds true:
+
+$$ g^n = e \quad\quad\text{and}\quad\quad g^a = g^{a \text{ mod } n}$$
+
+## Ring
+
+A Ring is the tuple $(\mathcal{R}, +, \cdot)$ if  $(\mathcal{R}, +)$ is an abelian (commutative) group and the function $\cdot : \mathcal{R} \times \mathcal{R} \rightarrow \mathcal{R}$ is associative, distributive and has a neutral element.
+
+The set of invertible elements in $\mathcal{R}$ is denoted by $\mathcal{R}^*$. The tuple $(\mathcal{R}^*, \cdot)$ is an abelian group called group of units.
+
+## Greatest common divisor
+
+We say $a \text{ divides } b$ or $a | b$ if $\exists c \in \mathbb{Z} : b = c \cdot a$. The greatest common divisor is definded as $$gcd(a, b) = max\{c : c | a \text{ and } c | b\} \text{ where } gcd(0,0) := 0$$
+
+The set of invertible elements of $\mathbb{Z}_n$ can be determined by the gcd.
+$$\mathbb{Z}_n^* = \{a \in \mathbb{Z}_n | gcd(a, n) = 1\}$$
+
+## Eurler's Totient Function
+
+Let $n \geq 2$. The Euler's totient function is defined by $$\Phi(n) = | \mathbb{Z}_n^* | = (p_0 - 1) + p_0^{\alpha_0 - 1} \dots (p_{r-1} - 1) + p_{r-1}^{\alpha_{r-1} - 1}$$ where $p_1, \dots, p_{r-1}$ are primes and $n = p_0^{\alpha_0 - 1} \cdot \dots \cdot p_{r-1}^{\alpha_{r-1} - 1}$. Let $p$ be a prime, then $\Phi(p) = p - 1$.
+
+## Euclids Algorithm
+
+\begin{minipage}{.3\linewidth}
+Algorithm to calculate the gcd. Can be extended to calculate the inverse of an element in $\mathbb{Z}_n^*$.
+\end{minipage}\hfill
+\begin{minipage}{.65\linewidth}
+    \includegraphics[width=\linewidth]{img/euclid}
+\end{minipage}
+
+## Fast Exponentiation
+
+\Begin{minipage}{.7\linewidth}
+
+Algorithm to efficiently compute the exponentiation of a group element. Let $\mathcal{G}$ be a group and $g \in \mathcal{G}, m \in \mathbb{N}$. It uses the fact, that $g^{2k} = (g^k)^2$. Instead of doing $2k$ multiplications, we can do $k + 1$. This is applied recursively to minimize the number of exponentiations that need to be computed. To make the algorithm work with any $k$ (not just powers of $2$), we use the binary representation of the exponent, e.g.
+
+$$13 = 2^0 + 2^2 + 2^3 = (1101)_2 \quad \Rightarrow \quad g^{13} = g^{2^0} \cdot g^{2^2} \cdot g^{2^3}$$
+
+To compute $g^m$, the algorithm iterates over the bits of $m$. If the bit is one, multiply the result with the current factor. In any case, square the current factor.
+
+The algorithm has a complexity of $\mathcal{O}(log(m))$.
+
+\End{minipage}\hfill
+\begin{minipage}{.25\linewidth}
+\includegraphics[width=\linewidth]{img/fast_exp}
+\end{minipage}
+
+## Cyclic Groups
+
+A group $\mathcal{G}$ is called cyclic, iff $\exists g \in \mathcal{G}$ such that  $\langle g\rangle = \mathcal{G}$.
+
+If $p = |\mathcal{G}|$ is prime, then $\mathcal{G}$ is a cyclic group.
+
+$\mathbb{Z}_p^*$ is a cyclic group if $p$ is prime.
+
+### Subgroups
+
+Let $(\mathcal{G}, \cdot)$ be a finite group and $U \subseteq \mathcal{G}$. 
+
+**Definition**: The tuple $(U, \cdot)$ is a subgroup of $\mathcal{G}$ iff $U$ is a group.
+
+**Lemma**:  The tuple $(U, \cdot)$ is a subgroup of $\mathcal{G}$ iff $1 \in U$ and $a \cdot b \in U \quad \forall a,b \in U$
+
+**Lagranges Theorem**: If $U$ is a subgroup of $\mathcal{G}$, then it holds true that $|U| | |\mathcal{G}$.
+
+### Generated Groups and Generators
+
+Let $\mathcal{G}$ be a group and $g \in \mathcal{G}$. By $\langle g\rangle$ we denote the smallest subgroup of $\mathcal{G}$ that contains $g$. 
+$$\langle g\rangle = \{1, g, g^{-1}, g^{2}, g^{-2}, \dots\}\quad
+\text{ and if $\mathcal{G}$ if inite: }
+\langle g\rangle = \{1, g, g^{2}, \dots, g^{|\langle g\rangle| - 1}\}$$
+We call $g$ a generator of $\mathcal{G}$ if $\langle g\rangle = \mathcal{G}$. 
+
+### Finding Generators
+
+We find generators for a group by guessing a group element and checking whether or not it is a generator. This can be evaluated by the equation 
+$$g^{n/p} \neq 1 \quad \forall p \text{(prime factors of n) and } n = |\mathcal{G}|$$
+
+\begin{center}\includegraphics[width=.7\linewidth]{img/gen_test}\end{center}
