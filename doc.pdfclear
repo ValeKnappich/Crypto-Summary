@@ -1,0 +1,167 @@
+<h1 id="symmetric-encryption">Symmetric encryption</h1>
+<p><strong>Kerkhoffs Principle</strong>: The security of a system should only depend on whether the actual key is secret, not on the system itself. The whole system is assumed to be public. No “Security by obscurity”.</p>
+<h2 id="scenario-1">Scenario 1</h2>
+<p><strong>One message with constant length</strong></p>
+<h3 id="cryptosystems">Cryptosystems</h3>
+<p>A cryptosystem is a tuple <span class="math inline">𝒮 = (<em>X</em>, <em>K</em>, <em>Y</em>, <em>e</em>, <em>d</em>)</span> with</p>
+<ul>
+<li>X: set of plaintexts</li>
+<li>K: finite set of keys</li>
+<li>Y: set of ciphertexts</li>
+<li>e: encryption function</li>
+<li>d: decryption function</li>
+</ul>
+<p>Perfect correctness: <span class="math inline"><em>d</em>(<em>e</em>(<em>x</em>, <em>k</em>), <em>k</em>)  ∀<em>x</em> ∈ <em>X</em>, <em>k</em> ∈ <em>K</em></span></p>
+<p>No unnecessary ciphertexts: <span class="math inline"><em>Y</em> = {<em>e</em>(<em>x</em>, <em>k</em>)|<em>x</em> ∈ <em>X</em>, <em>k</em> ∈ <em>K</em>}</span></p>
+<h3 id="vernam-system">Vernam system</h3>
+<p>The Vernam cryptosystem of length <span class="math inline"><em>l</em></span> is defined as <span class="math inline">({0, 1}<sup><em>l</em></sup>, {0, 1}<sup><em>l</em></sup>, {0, 1}<sup><em>l</em></sup>, <em>e</em>, <em>d</em>)</span> where</p>
+<p><span class="math inline"><em>e</em>(<em>x</em>, <em>k</em>) = <em>x</em> ⊕ <em>k</em></span> and <span class="math inline"><em>d</em>(<em>y</em>, <em>k</em>) = <em>y</em> ⊕ <em>k</em></span>.</p>
+<p>A vernam system of length <span class="math inline"><em>l</em> &gt; 0</span> provides perfect secrecy for every uniform <span class="math inline"><em>P</em><sub><em>K</em></sub></span>. It is the perfect system for Scenario 1.</p>
+<h3 id="perfect-secrecy">Perfect Secrecy</h3>
+<p>A cryptosystem with key distribution <span class="math inline">𝒱 = 𝒮[<em>P</em><sub><em>k</em></sub>]</span> provides perfect secrecy if for all plaintext distributions <span class="math inline"><em>P</em><sub><em>X</em></sub></span>, the probability of every plaintext remains the same after the ciphertext is seen, i.e.: <span class="math display"><em>P</em>(<em>x</em>) = <em>P</em>(<em>x</em>|<em>y</em>)  ∀<em>x</em> ∈ <em>X</em>, <em>y</em> ∈ <em>Y</em>, <em>P</em>(<em>y</em>) &gt; 0</span></p>
+<p><strong>Example Proof</strong>:</p>
+We need to show the criteria above for all plaintext distributions <span class="math inline"><em>P</em><sub><em>X</em></sub></span>. Therefore we use variable probabilities for the plaintexts <span class="math inline"><em>P</em><sub><em>X</em></sub>(<em>a</em>) = <em>p</em>, <em>P</em><sub><em>X</em></sub>(<em>b</em>) = 1 − <em>p</em></span> (for 2 plaintexts, else <span class="math inline"><em>p</em><sub>1</sub>, ..., <em>p</em><sub><em>n</em></sub></span>).
+<p><strong>Theorem</strong>:</p>
+<p>Let <span class="math inline">𝒮 = (<em>X</em>, <em>K</em>, <em>Y</em>, <em>e</em>, <em>d</em>)</span> be a cryptosystem providing perfect secrecy, then it holds <span class="math inline">|<em>K</em>| ≥ |<em>Y</em>| ≥ |<em>X</em>|</span>.</p>
+<p><strong>Shannons Theorem</strong>:</p>
+<p>Let <span class="math inline">𝒱 = 𝒮[<em>P</em><sub><em>k</em></sub>]</span> be a cryptosystem with key distribution <span class="math inline"><em>P</em><sub><em>K</em></sub></span> and <span class="math inline">|<em>K</em>| = |<em>Y</em>| = |<em>X</em>|</span>. The system provides perfect secrecy if and only if</p>
+<ol type="1">
+<li><span class="math inline"><em>P</em><sub><em>K</em></sub></span> is a uniform distribution</li>
+<li><span class="math inline">∀<em>x</em> ∈ <em>X</em>, <em>y</em> ∈ <em>Y</em>∃<em>k</em> ∈ <em>K</em> with <em>e</em>(<em>x</em>, <em>k</em>) = <em>y</em></span> (There must be a key for every plaintext/ciphertext pair)</li>
+</ol>
+<h2 id="scenario-2">Scenario 2</h2>
+<p><strong>Multiple messages with constant length, no repetition</strong></p>
+<h3 id="vernam-in-scenario-2">Vernam in Scenario 2</h3>
+<p>Vernam is not a secure cryptosystem anymore, since from 2 ciphertexts, Eve can learn non-trivial information about the plaintexts: <span class="math display"><em>y</em><sub>0</sub> ⊕ <em>y</em><sub>1</sub> = <em>x</em><sub>0</sub> ⊕ <em>k</em> ⊕ <em>x</em><sub>1</sub> ⊕ <em>k</em> = <em>x</em><sub>0</sub> ⊕ <em>x</em><sub>1</sub></span></p>
+<p>Also with 1 plaintext-ciphertext pair (CPA), the key can be calculated as <span class="math inline"><em>k</em> = <em>x</em> ⊕ <em>y</em></span>.</p>
+<h3 id="substitution-cryptosystem">Substitution Cryptosystem</h3>
+<p>Let <span class="math inline"><em>X</em></span> be a non-empty finite set. A substitution cryptosystem over X is a tuple <span class="math inline">(<em>X</em>, <em>P</em><sub><em>X</em></sub>, <em>X</em>, <em>e</em>, <em>d</em>)</span> where <span class="math inline"><em>P</em><sub><em>X</em></sub></span> is the set of all permutations of <span class="math inline"><em>X</em></span>. <span class="math display"><em>e</em>(<em>x</em>, <em>π</em>) = <em>π</em>(<em>x</em>)  <em>d</em>(<em>y</em>, <em>π</em>) = <em>π</em><sup> − 1</sup>(<em>y</em>)  ∀<em>x</em>, <em>y</em> ∈ <em>X</em>, <em>π</em> ∈ <em>P</em><sub><em>X</em></sub></span></p>
+<p>Substitution cryptosystems provide “perfect security” in scenario 2, but they are impractical because the substitution table (<span class="math inline"><em>π</em></span>) has a size of <span class="math inline">2<sup><em>l</em></sup> * <em>l</em></span>.</p>
+<h3 id="l-block-cipher"><span class="math inline"><em>l</em></span>-Block Cipher</h3>
+<p>Let <span class="math inline"><em>l</em> : ℕ → ℕ</span> be a polynomial. An <span class="math inline"><em>l</em></span>-block cipher <span class="math inline"><em>B</em></span> is a cryptosystem of the form</p>
+<p><span class="math inline">({0, 1}<sub><em>η</em> ∈ ℕ</sub><sup><em>l</em>(<em>η</em>)</sup>, <em>G</em><em>e</em><em>n</em>(1<sup><em>η</em></sup>), {0, 1}<sub><em>η</em> ∈ ℕ</sub><sup><em>l</em>(<em>η</em>)</sup>, <em>E</em>, <em>D</em>)</span> or simplified: <span class="math inline">({0, 1}<sup><em>l</em></sup>, <em>G</em><em>e</em><em>n</em>(1<sup><em>η</em></sup>), {0, 1}<sup><em>l</em></sup>, <em>E</em>, <em>D</em>)</span></p>
+<h3 id="substitution-permutation-cryptosystem-spcs">Substitution-Permutation Cryptosystem (SPCS)</h3>
+<p><strong>Notation</strong>:</p>
+<ul>
+<li>plaintexts are split into <span class="math inline"><em>m</em></span> words with length <span class="math inline"><em>n</em></span> with <span class="math inline"><em>l</em> = <em>m</em> * <em>n</em></span>, <span class="math inline"><em>x</em><sup>(<em>i</em>)</sup></span> denotes the <span class="math inline"><em>i</em></span>’th word</li>
+<li><span class="math inline">[<em>r</em>] = {0, 1, ..., <em>r</em> − 1}</span></li>
+<li><span class="math inline"><em>β</em> ∈ 𝒫<sub>[<em>l</em>]</sub></span>, then <span class="math inline"><em>x</em><sup><em>β</em></sup>(<em>i</em>) = <em>x</em>(<em>β</em>(<em>i</em>))</span></li>
+</ul>
+<p><strong>General Principle</strong>: Over <span class="math inline"><em>r</em></span> rounds, (round) key additions, word substitutions and bit permutations are applied, including an initial step that just applies key addition and shortened last round without bit permutation.</p>
+<p><strong>Importance of S-Box</strong> Without the S-Box the SPCS is a linear sequence of key additions and since the permutation table is known it is possible to generate a surrogate key based on a known plaintext/ciphertext pair. This is because the system without the S-Box is basically the same as permutating some of the round keys beforehand and then encrypting the plaintext with it. This would result in the same insecurity a Vernam system provides in this scenario. <span class="math inline">$adv(U,B) = succ(U, B) - fail(U, B) = 1 - \frac{1}{2^n}$</span></p>
+<p><strong>Importance of bit permutation</strong> Without the bit permutation the words of the plaintext are encrypted independent of eachother and an adversary is able to construct two plaintexts with equal words at the ending. Since is reveals some non-trivial information to the adversary, by leaking information of some words of the plaintext, the system would be insecure. The advantage of the adversary is given by</p>
+<p><strong>Known Attacks</strong>:</p>
+<ul>
+<li>Brute Force Attack</li>
+<li>Linear Cryptanalysis</li>
+<li>Differential Cryptanalysis</li>
+</ul>
+<p><strong>Linear Cryptanalysis</strong>:</p>
+<ul>
+<li>Relies on a set <span class="math inline"><em>T</em></span> of plaintext-ciphertext pairs</li>
+<li>Instead of brute forcing the whole key, get small parts of the key at a time</li>
+<li>Exploit linear dependencies</li>
+<li>This can be found through the orientation</li>
+<li>The goal is to gather the best orientation by going through every step</li>
+<li>The parts are</li>
+<li>Parallel composition</li>
+<li>Bit permutation</li>
+<li>Key addition</li>
+<li>Sequential composition</li>
+</ul>
+<p><strong>AES (Advanced encryption standard)</strong>: basically SPCS with modifications</p>
+<h3 id="algorithmic-security-of-block-ciphers">Algorithmic Security of Block Ciphers</h3>
+<p>We consider a block cipher secure if it is almost as good as a substitution cryptosystem w.r.t. resource-bound adversaries. Therefore no adversary <span class="math inline"><em>U</em></span> should be able to distinguish BCS and SCS. Formally, we use the BCS for <span class="math inline"><em>b</em> = 1</span> (real world) and the SCS for <span class="math inline"><em>b</em> = 0</span> (random world) in the security game.</p>
+<p>The winning probability is <span class="math inline"><em>P</em><em>r</em>[𝔼(1<sup><em>n</em></sup>) = 1]</span>. Since a random guesser already has a probability of <span class="math inline">0.5</span>, the advantage is normalized.</p>
+<p><img src="img/BC_SG.png" /></p>
+<p></p>
+<h3 id="prpprf-switching-lemma">PRP/PRF Switching Lemma</h3>
+<p>Since substitution cryptosystems cannot be distinguished from (secure) <span class="math inline"><em>l</em></span>-Block cryptosystems, we can see <span class="math inline"><em>l</em></span>-Block cryptosystems as pseudo-random permutations (PRP). Anyway, for proving purposes, it can be easier to see them as pseudo-random functions. The PRP/PRF Switching Lemma says, that we can use them interchangeably, since the difference of advantages is negligible:</p>
+<p>Let <span class="math inline"><em>B</em></span> be an <span class="math inline"><em>l</em></span>-block cipher and <span class="math inline"><em>U</em></span> be an <span class="math inline"><em>l</em></span>-distinguisher with runtime bound <span class="math inline"><em>q</em>(<em>η</em>)</span> where q is a positive polynomial and <span class="math inline"><em>η</em> ∈ ℕ</span>. Then the following holds true:</p>
+<p><span class="math display">$$|Adv^{PRP}_{U,B}(\eta) - Adv^{PRF}_{U,B}(\eta)| \leq \frac{q(\eta)^2}{2^{l(\eta)+1}}$$</span></p>
+<h2 id="scenario-3">Scenario 3</h2>
+<p><strong>Arbitrary messages with any length (possibly with repetition)</strong></p>
+<h3 id="symmetric-encryption-scheme">Symmetric Encryption Scheme</h3>
+<p>A symmetric encryption scheme is a tuple <span class="math inline"><em>S</em> = (<em>G</em><em>e</em><em>n</em>(<sup><em>η</em></sup>), <em>E</em>, <em>D</em>)</span> with</p>
+<ul>
+<li>security parameter <span class="math inline"><em>η</em></span></li>
+<li>ppt key generation algorithm <span class="math inline"><em>G</em><em>e</em><em>n</em>(1<sup><em>η</em></sup>)</span></li>
+<li>ppt encryption algorithm <span class="math inline"><em>E</em>(<em>x</em> : {0, 1}<sup>*</sup>, <em>k</em> : <em>K</em>) : {0, 1}<sup>*</sup></span></li>
+<li>dpt decryption algorithm <span class="math inline"><em>D</em>(<em>y</em> : {0, 1}<sup>*</sup>, <em>k</em> : <em>K</em>) : {0, 1}<sup>*</sup></span><br />
+</li>
+<li>and <span class="math inline"><em>D</em>(<em>E</em>(<em>x</em>, <em>k</em>), <em>k</em>) = <em>x</em></span></li>
+</ul>
+<p>E cannot be deterministic, because else we wouldn’t be able to send the same message multiple times, i.e. the same plaintext encrypted under the same key should result in a different ciphertext (with a high probability).</p>
+<h3 id="encryption-schemes-from-stream-ciphers">Encryption Schemes from Stream Ciphers</h3>
+<p><strong>Idea</strong>: Vernam is safe if we use every key just once. So using the key as seed of a random number generator, that generates a stream of random numbers, enables the usage of the vernam system for arbitrarily long messages.</p>
+<h4 id="number-generator">Number generator</h4>
+<p>A number generator (NG) is a dpt algorithm of the Form <span class="math inline"><em>G</em> : (<em>s</em> : {0, 1}<sup><em>η</em></sup>) : {0, 1}<sup><em>p</em>(<em>η</em>)</sup></span> where <span class="math inline"><em>p</em></span> is the expansion factor.</p>
+<h4 id="prng-distinguisher">PRNG-Distinguisher</h4>
+<p>TODO</p>
+<h3 id="encryption-schemes-from-block-ciphers">Encryption Schemes from Block Ciphers</h3>
+<h4 id="ecb-mode">ECB Mode</h4>
+<p><strong>Idea</strong>: Split the message in blocks of constant length and encrypt each block under the given key using the underlying block cipher.</p>
+<p></p>
+<p><strong>Security</strong>: It’s not secure, since the ciphertext carries non-trivial information about the plaintext: <span class="math inline">for <em>y</em> = <em>y</em><sub>0</sub>||<em>y</em><sub>1</sub>, then <em>y</em><sub>0</sub> = <em>y</em><sub>1</sub> if <em>x</em><sub>0</sub> = <em>x</em><sub>1</sub></span>.</p>
+<h4 id="cbc-mode">CBC Mode</h4>
+<p><strong>Idea</strong>: Add and initialization vector <span class="math inline"><em>v</em></span> that is ’ed with the plaintext before encrypting. That <span class="math inline"><em>v</em></span> is part of the key.  <strong>Problem</strong>: Still deterministic, so every plaintext can be sent just once.</p>
+<h4 id="r-cbc-mode">R-CBC Mode</h4>
+<p><strong>Idea</strong>: To solve the issues of CBC-Mode, R-CBC moves the initialization vector <span class="math inline"><em>v</em></span> out of the key and generates a random one while decryption. The vector is appended as first block of the ciphertext to enable decryption.  <strong>Security</strong>: Its secure if the underlying block cipher is secure.</p>
+<h4 id="r-ctr-mode">R-CTR Mode</h4>
+<p><strong>Idea</strong>: Alternative to R-CBC. Generate a random number <span class="math inline"><em>r</em></span> (comparable to <span class="math inline"><em>v</em></span> of R-CBC), encrypt this random number under the key and xor it with the plaintext. The counter is increased by 1 for each block. The counter <span class="math inline"><em>r</em></span> is appended as first block of <span class="math inline"><em>y</em></span> to enable decryption.  <strong>Security</strong>: Its secure if the underlying block cipher is secure.</p>
+<h3 id="cpa-security">CPA-Security</h3>
+<p><strong>CPA</strong>: Chosen-Plaintext-Attack  <strong>Game</strong>: Adversary <span class="math inline"><em>A</em></span> consists of finder <span class="math inline"><em>A</em><em>F</em></span> and guesser <span class="math inline"><em>A</em><em>G</em></span>. The finder chooses 2 plaintexts <span class="math inline"><em>z</em><sub>0</sub>, <em>z</em><sub>1</sub></span>. One of them is encrypted. The guesser has to determine which of them is the corresponding plaintext.  Advantage, success and failure are defined as for block ciphers.</p>
+<h3 id="cca-security">CCA-Security</h3>
+<p><strong>CCA</strong>: Chosen-Ciphertext-Attack  <strong>Game</strong>: In addition to the encryption oracle <span class="math inline"><em>H</em></span> from the CPA-game, the adversary also gets a decryption oracle <span class="math inline"><em>H</em><sup> − 1</sup></span>.  Advantage, success and failure are defined as for block ciphers.</p>
+<h3 id="vaudenays-padding-attack">Vaudenay’s Padding Attack</h3>
+<ul>
+<li>TODO</li>
+</ul>
+<h1 id="number-theory">Number Theory</h1>
+<h2 id="fundamental-theorem-of-arithmetic">Fundamental Theorem of Arithmetic</h2>
+<p>Every natural number <span class="math inline"><em>n</em> ∈ ℕ, <em>n</em> ≥ 2</span> has exactly one combination of prime factors.</p>
+<p><span class="math display"><em>n</em> = <em>p</em><sub>1</sub> * … * <em>p</em><sub><em>k</em></sub>  with<em>k</em> ≤ <em>l</em><em>o</em><em>g</em>(<em>n</em>)</span></p>
+<h2 id="modulo">Modulo</h2>
+<p>Let <span class="math inline"><em>n</em> ∈ ℕ ∖ {0}, <em>a</em> ∈ ℤ</span>. Then <span class="math inline">∃!<em>q</em> ∈ ℤ, <em>r</em> ∈ {0, …, <em>n</em> − 1}</span> such that <span class="math inline"><em>a</em> = <em>n</em> * <em>q</em> + <em>r</em></span>.</p>
+<p><span class="math display"><em>a</em> div <em>n</em> := <em>q</em>    and    <em>a</em> mod <em>n</em> := <em>r</em></span></p>
+<h2 id="mathbbz_n"><span class="math inline">ℤ<sub><em>n</em></sub></span></h2>
+<p>Let <span class="math inline"><em>n</em> ≥ 1</span>. We define the set <span class="math inline">ℤ<sub><em>n</em></sub> := {0, …, <em>n</em> − 1}</span> of remainders of divisions by <span class="math inline"><em>n</em></span>. Let <span class="math inline"><em>a</em>, <em>b</em> ∈ ℤ<sub><em>n</em></sub></span>, then</p>
+<p><span class="math display"><em>a</em>+<sub><em>n</em></sub><em>b</em> := (<em>a</em> + <em>b</em>) mod <em>n</em>    and    <em>a</em>*<sub><em>n</em></sub><em>b</em> := (<em>a</em> * <em>b</em>) mod <em>n</em></span></p>
+<h2 id="group">Group</h2>
+<p>A tuple <span class="math inline">(𝒢,  ⋅ )</span> is called group if <span class="math inline">𝒢</span> is a non-empty set and <span class="math inline"> ⋅  : 𝒢 × 𝒢 → 𝒢</span> is a function such that:</p>
+<ul>
+<li><span class="math inline">(<em>x</em> ⋅ <em>y</em>) ⋅ <em>z</em> = <em>x</em> ⋅ (<em>y</em> ⋅ <em>z</em>)  ∀<em>x</em>, <em>y</em>, <em>z</em> ∈ 𝒢</span> (associativity)</li>
+<li><span class="math inline">∃<em>e</em> ∈ 𝒢 : <em>e</em> ⋅ <em>x</em> = <em>x</em> ⋅ <em>e</em> = <em>x</em>  ∀<em>x</em> ∈ 𝒢</span> (neutral element)</li>
+<li><span class="math inline">∀<em>x</em> ∈ 𝒢∃<em>x</em><sup> − 1</sup> ∈ 𝒢 : <em>x</em> ⋅ <em>x</em><sup> − 1</sup> = <em>e</em></span> (inverse element)</li>
+</ul>
+<p>The <em>order</em> of a group is the number of elements in <span class="math inline">𝒢</span>.</p>
+<p>The exponentiation is defined as usual. For a finite group <span class="math inline">(𝒢,  ⋅ )</span> with order <span class="math inline"><em>n</em></span> and neutral element <span class="math inline"><em>e</em></span>, the following holds true:</p>
+<p><span class="math display"><em>g</em><sup><em>n</em></sup> = <em>e</em>    and    <em>g</em><sup><em>a</em></sup> = <em>g</em><sup><em>a</em> mod <em>n</em></sup></span></p>
+<h2 id="ring">Ring</h2>
+<p>A Ring is the tuple <span class="math inline">(ℛ, +, ⋅ )</span> if <span class="math inline">(ℛ,  + )</span> is an abelian (commutative) group and the function <span class="math inline"> ⋅  : ℛ × ℛ → ℛ</span> is associative, distributive and has a neutral element.</p>
+<p>The set of invertible elements in <span class="math inline">ℛ</span> is denoted by <span class="math inline">ℛ<sup>*</sup></span>. The tuple <span class="math inline">(ℛ<sup>*</sup>,  ⋅ )</span> is an abelian group called group of units.</p>
+<h2 id="greatest-common-divisor">Greatest common divisor</h2>
+<p>We say <span class="math inline"><em>a</em> divides <em>b</em></span> or <span class="math inline"><em>a</em>|<em>b</em></span> if <span class="math inline">∃<em>c</em> ∈ ℤ : <em>b</em> = <em>c</em> ⋅ <em>a</em></span>. The greatest common divisor is definded as <span class="math display"><em>g</em><em>c</em><em>d</em>(<em>a</em>, <em>b</em>) = <em>m</em><em>a</em><em>x</em>{<em>c</em> : <em>c</em>|<em>a</em> and <em>c</em>|<em>b</em>} where <em>g</em><em>c</em><em>d</em>(0, 0) := 0</span></p>
+<p>The set of invertible elements of <span class="math inline">ℤ<sub><em>n</em></sub></span> can be determined by the gcd. <span class="math display">ℤ<sub><em>n</em></sub><sup>*</sup> = {<em>a</em> ∈ ℤ<sub><em>n</em></sub>|<em>g</em><em>c</em><em>d</em>(<em>a</em>, <em>n</em>) = 1}</span></p>
+<h2 id="eurlers-totient-function">Eurler’s Totient Function</h2>
+<p>Let <span class="math inline"><em>n</em> ≥ 2</span>. The Euler’s totient function is defined by <span class="math display"><em>Φ</em>(<em>n</em>) = |ℤ<sub><em>n</em></sub><sup>*</sup>| = (<em>p</em><sub>0</sub> − 1) + <em>p</em><sub>0</sub><sup><em>α</em><sub>0</sub> − 1</sup>…(<em>p</em><sub><em>r</em> − 1</sub> − 1) + <em>p</em><sub><em>r</em> − 1</sub><sup><em>α</em><sub><em>r</em> − 1</sub> − 1</sup></span> where <span class="math inline"><em>p</em><sub>1</sub>, …, <em>p</em><sub><em>r</em> − 1</sub></span> are primes and <span class="math inline"><em>n</em> = <em>p</em><sub>0</sub><sup><em>α</em><sub>0</sub> − 1</sup> ⋅ … ⋅ <em>p</em><sub><em>r</em> − 1</sub><sup><em>α</em><sub><em>r</em> − 1</sub> − 1</sup></span>. Let <span class="math inline"><em>p</em></span> be a prime, then <span class="math inline"><em>Φ</em>(<em>p</em>) = <em>p</em> − 1</span>.</p>
+<h2 id="euclids-algorithm">Euclids Algorithm</h2>
+
+<h2 id="fast-exponentiation">Fast Exponentiation</h2>
+<p>Algorithm to efficiently compute the exponentiation of a group element. Let <span class="math inline">𝒢</span> be a group and <span class="math inline"><em>g</em> ∈ 𝒢, <em>m</em> ∈ ℕ</span>. It uses the fact, that <span class="math inline"><em>g</em><sup>2<em>k</em></sup> = (<em>g</em><sup><em>k</em></sup>)<sup>2</sup></span>. Instead of doing <span class="math inline">2<em>k</em></span> multiplications, we can do <span class="math inline"><em>k</em> + 1</span>. This is applied recursively to minimize the number of exponentiations that need to be computed. To make the algorithm work with any <span class="math inline"><em>k</em></span> (not just powers of <span class="math inline">2</span>), we use the binary representation of the exponent, e.g.</p>
+<p><span class="math display">13 = 2<sup>0</sup> + 2<sup>2</sup> + 2<sup>3</sup> = (1101)<sub>2</sub>  ⇒  <em>g</em><sup>13</sup> = <em>g</em><sup>2<sup>0</sup></sup> ⋅ <em>g</em><sup>2<sup>2</sup></sup> ⋅ <em>g</em><sup>2<sup>3</sup></sup></span></p>
+<p>To compute <span class="math inline"><em>g</em><sup><em>m</em></sup></span>, the algorithm iterates over the bits of <span class="math inline"><em>m</em></span>. If the bit is one, multiply the result with the current factor. In any case, square the current factor.</p>
+<p>The algorithm has a complexity of <span class="math inline">𝒪(<em>l</em><em>o</em><em>g</em>(<em>m</em>))</span>.</p>
+<h2 id="cyclic-groups">Cyclic Groups</h2>
+<p>A group <span class="math inline">𝒢</span> is called cyclic, iff <span class="math inline">∃<em>g</em> ∈ 𝒢</span> such that <span class="math inline">⟨<em>g</em>⟩ = 𝒢</span>.</p>
+<p>If <span class="math inline"><em>p</em> = |𝒢|</span> is prime, then <span class="math inline">𝒢</span> is a cyclic group.</p>
+<p><span class="math inline">ℤ<sub><em>p</em></sub><sup>*</sup></span> is a cyclic group if <span class="math inline"><em>p</em></span> is prime.</p>
+<h3 id="subgroups">Subgroups</h3>
+<p>Let <span class="math inline">(𝒢,  ⋅ )</span> be a finite group and <span class="math inline"><em>U</em> ⊆ 𝒢</span>.</p>
+<p><strong>Definition</strong>: The tuple <span class="math inline">(<em>U</em>,  ⋅ )</span> is a subgroup of <span class="math inline">𝒢</span> iff <span class="math inline"><em>U</em></span> is a group.</p>
+<p><strong>Lemma</strong>: The tuple <span class="math inline">(<em>U</em>,  ⋅ )</span> is a subgroup of <span class="math inline">𝒢</span> iff <span class="math inline">1 ∈ <em>U</em></span> and <span class="math inline"><em>a</em> ⋅ <em>b</em> ∈ <em>U</em>  ∀<em>a</em>, <em>b</em> ∈ <em>U</em></span></p>
+<p><strong>Lagranges Theorem</strong>: If <span class="math inline"><em>U</em></span> is a subgroup of <span class="math inline">𝒢</span>, then it holds true that <span class="math inline">|<em>U</em>|||𝒢</span>.</p>
+<h3 id="generated-groups-and-generators">Generated Groups and Generators</h3>
+<p>Let <span class="math inline">𝒢</span> be a group and <span class="math inline"><em>g</em> ∈ 𝒢</span>. By <span class="math inline">⟨<em>g</em>⟩</span> we denote the smallest subgroup of <span class="math inline">𝒢</span> that contains <span class="math inline"><em>g</em></span>. <span class="math display">⟨<em>g</em>⟩ = {1, <em>g</em>, <em>g</em><sup> − 1</sup>, <em>g</em><sup>2</sup>, <em>g</em><sup> − 2</sup>, …}   and if 𝒢 if inite: ⟨<em>g</em>⟩ = {1, <em>g</em>, <em>g</em><sup>2</sup>, …, <em>g</em><sup>|⟨<em>g</em>⟩| − 1</sup>}</span> We call <span class="math inline"><em>g</em></span> a generator of <span class="math inline">𝒢</span> if <span class="math inline">⟨<em>g</em>⟩ = 𝒢</span>.</p>
+<h3 id="finding-generators">Finding Generators</h3>
+<p>We find generators for a group by guessing a group element and checking whether or not it is a generator. This can be evaluated by the equation <span class="math display"><em>g</em><sup><em>n</em>/<em>p</em></sup> ≠ 1  ∀<em>p</em>(prime factors of n) and <em>n</em> = |𝒢|</span></p>
