@@ -441,7 +441,7 @@ Symmetric encryption is efficient, but requires a key exchange that makes it imp
 
 ## Asymmetric Encryption Scheme
 
-As with symmetric encryption, the scheme is a tuple $\mathcal{S} = (X, Gen(1^\eta), E, E)$. The key gen algorithm now outputs a tuple $(k, \hat{k})$ (public, private), the encryption $E$ uses the public key $k$ and decrpytion $D$ the private key $\hat{k}$.
+As with symmetric encryption, the scheme is a tuple $\mathcal{S} = (X, Gen(1^\eta), E, D)$. The key gen algorithm now outputs a tuple $(k, \hat{k})$ (public, private), the encryption $E$ uses the public key $k$ and decrpytion $D$ the private key $\hat{k}$.
 
 ## Asymmetric CPA-Security
 
@@ -483,3 +483,20 @@ Since the encryption function is deterministic, this textbook RSA is not secure.
 While this is assumed to be sufficient for CPA-Security, RSA does not hold CCA-Security. In fact one doesn't even need a full decryption oracle as demonstrated in the Bleichenbacher Attack. 
 
 ## ElGamal
+
+The ElGamal is an asymmetric encryption scheme that builds on the fact that it is hard to get $g^{ab}$ from $g^a$ and $g^b$, but easy to get from either $g^a$ and $b$ or $g^b$ and $a$.
+
+- The keygen algorithm randomly selects a $b \in \{0, \dots, n-1\}$, where $(\mathcal{G}, n, g)$ is the output of the GroupGen algorithm. The output is the public key $(\mathcal{G}, n, g, g^b)$ and the private key $(\mathcal{G}, n, g, b)$. In a real scenario this represents the keypair of the receiving person.
+- The encryption function obtains another private key $a$ randomly and calculates the public key $g^a$. In practice, this is the senders keypair. $E$ encrypts the plaintext $x$ by calculating $x \cdot (g^b)^a$
+- The decryption function takes the senders public key, exponentiates it with the receivers private key and inverts the result to obtain $((g^a)^b)^{-1}$. This can be used to calculate the plaintext as $y \cdot ((g^a)^b)^{-1} = x \cdot (g^b)^a \cdot ((g^a)^b)^{-1} = x$.
+
+Formally:
+
+\begin{minipage}{.4\linewidth}
+\centering
+\includegraphics[width=.7\linewidth]{img/el_gamal_e}
+\end{minipage}\hfill
+\begin{minipage}{.55\linewidth}
+\centering
+\includegraphics[width=.7\linewidth]{img/el_gamal_d}
+\end{minipage}

@@ -1,2 +1,4 @@
 1. Difference between security game and shortened version? why?
 2. Why do we only consider 2 out of 4 cases in success and failure?
+3. In ElGamal the definition says, that a is chosen randomly. In practice, this a is the other persons private key, right? Wouldnt that make the encryption function deterministic?
+4. In ElGamal the private key b is chosen from the range of 0 to n-1. Why is it not just sampling from the group? Isnt it the same?
