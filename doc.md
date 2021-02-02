@@ -19,6 +19,8 @@ header-includes: |
 
     \usepackage{tabto}
     \TabPositions{2cm, 4cm, 6cm, 8cm, 10cm, 12cm, 14cm, 16cm}
+
+    \newcommand{\sample}{\overset{\$}{\leftarrow}}
 ---
 
 \tableofcontents
@@ -172,7 +174,6 @@ Since substitution cryptosystems cannot be distinguished from (secure) $l$-Block
 
 Let $B$ be an $l$-block cipher and $U$ be an $l$-distinguisher with runtime bound $q(\eta)$ where q is a positive polynomial and $\eta \in 	\mathbb{N}$.
 Then the following holds true:
-
 $$|Adv^{PRP}_{U,B}(\eta) - Adv^{PRF}_{U,B}(\eta)| \leq \frac{q(\eta)^2}{2^{l(\eta)+1}}$$
 
 ## Scenario 3
@@ -186,7 +187,7 @@ A symmetric encryption scheme is a tuple $S = (Gen(^\eta), E, D)$ with
 - security parameter $\eta$
 - ppt key generation algorithm $Gen(1^\eta)$
 - ppt encryption algorithm $E(x: \{0, 1\}^*, k: K) : \{0,1\}^*$ 
-- dpt decryption algorithm $D(y: \{0,1\}^*, k: K) : \{0,1\}^*$  
+- dpt decryption algorithm $D(y: \{0,1\}^*, k: K) : \{0,1\}^*$
 - and $D(E(x, k), k) = x$
 
 E cannot be deterministic, because else we wouldn't be able to send the same message multiple times, i.e. the same plaintext encrypted under the same key should result in a different ciphertext (with a high probability).
@@ -292,19 +293,16 @@ Advantage, success and failure are defined as for block ciphers.
 ## Fundamental Theorem of Arithmetic
 
 Every natural number $n \in \mathbb{N}, n \geq 2$ has exactly one combination of prime factors.
-
 $$n = p_1 * \dots * p_k \quad \text{with} k \leq log(n)$$ 
 
 ## Modulo
 
 Let $n \in \mathbb{N}\backslash \{0\}, a \in \mathbb{Z}$. Then $\exists !q \in \mathbb{Z}, r \in \{0, \dots, n-1\}$ such that $a = n*q + r$.
-
 $$a \text{ div } n := q  \quad\quad\text{and}\quad\quad a \text{ mod } n := r$$
 
 ## $\mathbb{Z}_n$
 
 Let $n \geq 1$. We define the set $\mathbb{Z}_n := \{0, \dots, n-1\}$ of remainders of divisions by $n$. Let $a,b \in \mathbb{Z}_n$, then 
-
 $$a +_n b := (a + b) \text{ mod } n \quad\quad\text{and}\quad\quad a *_n b := (a * b) \text{ mod } n$$
 
 ## Group
@@ -318,7 +316,6 @@ A tuple $(\mathcal{G}, \cdot)$ is called group if $\mathcal{G}$ is a non-empty s
 The *order* of a group is the number of elements in $\mathcal{G}$.
 
 The exponentiation is defined as usual. For a finite group $(\mathcal{G}, \cdot)$ with order $n$ and neutral element $e$, the following holds true:
-
 $$ g^n = e \quad\quad\text{and}\quad\quad g^a = g^{a \text{ mod } n}$$
 
 ## Ring
@@ -336,7 +333,9 @@ $$\mathbb{Z}_n^* = \{a \in \mathbb{Z}_n | gcd(a, n) = 1\}$$
 
 ## Eurler's Totient Function
 
-Let $n \geq 2$. The Euler's totient function is defined by $$\Phi(n) = | \mathbb{Z}_n^* | = (p_0 - 1) + p_0^{\alpha_0 - 1} \dots (p_{r-1} - 1) + p_{r-1}^{\alpha_{r-1} - 1}$$ where $p_1, \dots, p_{r-1}$ are primes and $n = p_0^{\alpha_0 - 1} \cdot \dots \cdot p_{r-1}^{\alpha_{r-1} - 1}$. Let $p$ be a prime, then $\Phi(p) = p - 1$.
+Let $n \geq 2$. The Euler's totient function is defined by $$\Phi(n) = | \mathbb{Z}_n^* | = (p_0 - 1) \cdot p_0^{\alpha_0 - 1} \dots (p_{r-1} - 1) \cdot p_{r-1}^{\alpha_{r-1} - 1}$$ where $p_1, \dots, p_{r-1}$ are primes and $n = p_0^{\alpha_0} \dots p_{r-1}^{\alpha_{r-1}}$. Let $p$ be a prime, then $\Phi(p) = p - 1$.
+
+It can also be used to calculate the number of generators in a cyclic group as $\Phi(n) \text{ where } n = |\mathcal{G}|$.
 
 ## Euclids Algorithm
 
@@ -352,7 +351,6 @@ Algorithm to calculate the gcd. Can be extended to calculate the inverse of an e
 \Begin{minipage}{.7\linewidth}
 
 Algorithm to efficiently compute the exponentiation of a group element. Let $\mathcal{G}$ be a group and $g \in \mathcal{G}, m \in \mathbb{N}$. It uses the fact, that $g^{2k} = (g^k)^2$. Instead of doing $2k$ multiplications, we can do $k + 1$. This is applied recursively to minimize the number of exponentiations that need to be computed. To make the algorithm work with any $k$ (not just powers of $2$), we use the binary representation of the exponent, e.g.
-
 $$13 = 2^0 + 2^2 + 2^3 = (1101)_2 \quad \Rightarrow \quad g^{13} = g^{2^0} \cdot g^{2^2} \cdot g^{2^3}$$
 
 To compute $g^m$, the algorithm iterates over the bits of $m$. If the bit is one, multiply the result with the current factor. In any case, square the current factor.
@@ -380,7 +378,7 @@ Let $(\mathcal{G}, \cdot)$ be a finite group and $U \subseteq \mathcal{G}$.
 
 **Lemma**:  The tuple $(U, \cdot)$ is a subgroup of $\mathcal{G}$ iff $1 \in U$ and $a \cdot b \in U \quad \forall a,b \in U$
 
-**Lagranges Theorem**: If $U$ is a subgroup of $\mathcal{G}$, then it holds true that $|U| | |\mathcal{G}$.
+**Lagranges Theorem**: If $U$ is a subgroup of $\mathcal{G}$, then it holds true that $|U|\;|\;|\mathcal{G}|$.
 
 ### Generated Groups and Generators
 
@@ -393,6 +391,80 @@ We call $g$ a generator of $\mathcal{G}$ if $\langle g\rangle = \mathcal{G}$.
 ### Finding Generators
 
 We find generators for a group by guessing a group element and checking whether or not it is a generator. This can be evaluated by the equation 
-$$g^{n/p} \neq 1 \quad \forall p \text{(prime factors of n) and } n = |\mathcal{G}|$$
+$$g^{n/p} \neq 1 \quad \forall \quad p \in P \text{ (prime factors of $n$) and } n = |\mathcal{G}|$$
 
-\begin{center}\includegraphics[width=.7\linewidth]{img/gen_test}\end{center}
+
+\begin{minipage}{.35\linewidth}
+\includegraphics[width=\linewidth]{img/gen_find}
+\end{minipage}\hfill
+\begin{minipage}{.6\linewidth}
+\includegraphics[width=\linewidth]{img/gen_test}
+\end{minipage}
+
+This only works, because the probability of finding a generator when randomly sampling is relatively high, concretely it is upper-bounded by $Pr[\langle X_g \rangle = \mathcal{G}] \geq \frac{1}{1+log(n)} \text{ with } X_g \sample \mathcal{G}$.
+
+
+### Quadratic Residues
+
+A number $a \in \mathbb{Z}_n^*$ *quadratic residue modulo $n$* iff there exists $b \in \mathbb{Z}_n$ such that $b^2 \text{ mod } n = a \text{ mod } n$. $b$ is called root of $a$. All quadratic residues modulo n are denoted by $QR(n)$ and all elements that are *quadratic nonresidue modulo n* $QNR(n)$ with $\mathbb{Z}_n^* = QR(n) \cup QNR(n)$. For prime $p$, both sets have the same order:
+$$|QR(p)| = |QNR(p)| = \frac{p-1}{2}$$
+
+### Eulers criterion
+
+Let $p > 2$ be a prime number, $a \in \mathbb{Z}$ and $e = a^{(p-1)/2} \text{ mod } p$ 
+
+1. $e \in \{0, 1, p-1\}$
+2. $a \text{ mod } p = 0 \Leftrightarrow e = 0$
+3. $a \text{ mod } p \in QR(p) \Leftrightarrow e = 1$
+4. $a \text{ mod } p \in QNR(p) \Leftrightarrow e = -1 \text{ mod } p$
+
+We also call the criterion *Legendre symbol of $a$ and $p$* $L_p(a) = a^{(p-1)/2}$.
+
+# Asymmetric Encryption
+
+Symmetric encryption is efficient, but requires a key exchange that makes it impractical for most usecases. Asymmetric encryption works without key exchange, be splitting the key in public and private.
+
+## Asymmetric Encryption Scheme
+
+As with symmetric encryption, the scheme is a tuple $\mathcal{S} = (X, Gen(1^\eta), E, E)$. The key gen algorithm now outputs a tuple $(k, \hat{k})$ (public, private), the encryption $E$ uses the public key $k$ and decrpytion $D$ the private key $\hat{k}$.
+
+## Asymmetric CPA-Security
+
+\begin{minipage}{.45\linewidth}
+The security game is defined analogously to symmetric encryption. The key is now a tuple and the adversary knows the public key. Advantage, success and failure are defined as for Block Ciphers.
+\end{minipage}\hfill
+\begin{minipage}{.45\linewidth}
+\includegraphics[width=\linewidth]{img/acpa}
+\end{minipage}
+
+## RSA
+
+RSA is an asymmetric encryption scheme $\mathcal{S}_{RSA} = (X, Gen(1^\eta), E, D)$. It uses the problem of computing prime factors as oneway function. 
+
+- The keygen algorithm randomly selects 2 different primes $p$ and $q$ of binary length $\eta$. 
+\begin{align*}
+&n = p \cdot q\quad\quad\quad\quad\quad\quad
+m = (p-1) \cdot (q-1) = \Phi(n)\\
+&e \sample \mathbb{Z}_m^* \quad\quad\quad
+d = e^{-1} \mod m\quad\quad\quad
+k = ((n,e), (n,d))
+\end{align*}
+- $E(x, (n,e)) = x^e \mod n$
+- $D(y, (n,d)) = y^d \mod n$
+
+
+\begin{minipage}{.55\linewidth}
+It has not been proven, that the RSA encryption cannot be inverted. An algorithm that attempts that is called inverter $I$. The advantage is assumed to be negligible, which is called RSA-Assumption.
+
+$|Adv^{RSA}_{I,S}(\eta)| = Pr[\mathbb{E}^{RSA}_{I,S}(1^\eta) = 1]$
+\end{minipage}\hfill
+\begin{minipage}{.35\linewidth}
+\includegraphics[width=\linewidth]{img/rsa}
+\end{minipage}
+
+
+Since the encryption function is deterministic, this textbook RSA is not secure. The scheme can be modified to be secure, by adding randomness. E.g. PKCS#1 v1.5 defines a random padding that fixes that issue: $$0^{14} || 10 || r || 0^8 || x$$
+
+While this is assumed to be sufficient for CPA-Security, RSA does not hold CCA-Security. In fact one doesn't even need a full decryption oracle as demonstrated in the Bleichenbacher Attack. 
+
+## ElGamal
