@@ -131,17 +131,32 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
     \includegraphics[width=\linewidth]{img/spcs_vis}
 \end{minipage}
 
-**Known Attacks**: 
+**Importance of S-Box**:
+
+Without the S-Box the SPCS is a linear sequence of key additions and since the permutation table is known it is possible to generate a surrogate key based on a known plaintext/ciphertext pair. This is because the system without the S-Box is basically the same as permutating some of the round keys beforehand and then encrypting the plaintext with it. This would result in the same insecurity a Vernam system provides in this scenario.
+
+**Importance of bit permutation**:
+
+Without the bit permutation the words of the plaintext are encrypted independent of eachother and an adversary is able to construct two plaintexts with equal words at the ending. Since is reveals some non-trivial information to the adversary, by leaking information of some words of the plaintext, the system would be insecure. The advantage of the adversary is given by $adv(U,B) = succ(U, B) - fail(U, B) = 1 - \frac{1}{2^n}$.
+
+**Known Attacks**:
 
 - Brute Force Attack
 - Linear Cryptanalysis
 - Differential Cryptanalysis
 
-**Linear Cryptanalysis**: 
+**Linear Cryptanalysis**:
 
 - Relies on a set $T$ of plaintext-ciphertext pairs
 - Instead of brute forcing the whole key, get small parts of the key at a time
 - Exploit linear dependencies
+ - This can be found through the orientation
+ - The goal is to gather the best orientation by going through every step
+ - The parts are
+  - Parallel composition
+  - Bit permutation
+  - Key addition
+  - Sequential composition
 
 **AES (Advanced encryption standard)**: basically SPCS with modifications
 
