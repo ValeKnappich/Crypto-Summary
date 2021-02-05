@@ -215,9 +215,24 @@ E cannot be deterministic, because else we wouldn't be able to send the same mes
 
 A number generator (NG) is a dpt algorithm of the Form $G : (s: \{0,1\}^\eta) : \{0,1\}^{p(\eta)}$ where $p$ is the expansion factor.
 
-#### PRNG-Distinguisher
+### PRNG-Distinguisher
 
-TODO
+Defined like this:
+$U (1^\eta, x : \{1^\eta\}^{p(\eta)}):\{0,1\}$
+
+\Begin{minipage}{.4\linewidth}
+
+![](img/prng-dist.png)
+
+\End{minipage}
+
+With an advantage of:
+\begin{align*}
+    Adv_{U,G}(\eta) &= 2\cdot (Pr[\mathbb{E}_{U,G}^{PRNG}(1^\eta)=1]-\frac{1}{2})\\
+    suc_{U,G}(\eta) &= Pr[\mathbb{S}_{U,G}^{PRNG}\langle b=1\rangle(1^\eta)=1]\\
+    fail_{U,G}(\eta) &= Pr[\mathbb{S}_{U,G}^{PRNG}\langle b=0\rangle(1^\eta)=1]\\
+    Adv_{U,G}(\eta) &= suc_{U,G}(\eta) - fail_{U,G}(\eta)\\
+\end{align*}
 
 ### Encryption Schemes from Block Ciphers
 
@@ -290,7 +305,7 @@ Advantage, success and failure are defined as for block ciphers.
 
 **CCA**: Chosen-Ciphertext-Attack
 \newline\newline
-**Game**: In addition to the encryption oracle $H$ from the CPA-game, the adversary also gets a decryption oracle $H^{-1}$. 
+**Game**: In addition to the encryption oracle $H$ from the CPA-game, the adversary also gets a decryption oracle $H^{-1}$.
 \newline\newline
 Advantage, success and failure are defined as for block ciphers.
 
@@ -301,7 +316,15 @@ Advantage, success and failure are defined as for block ciphers.
 
 ### Vaudenay's Padding Attack
 
-- TODO
+**Preconditions**
+- The Vaudenay's attack is based on the fact, that the adversary might have a padding oracle
+- This padding oracle gives him information if the set padding is correct or not
+- In reality this can be a server error, delayed answer from server or any feedback from the decryption algorithm.
+- For this attack the encryption algorithm has blocks of length 16 bytes and the last bytes are always the padding to fill up the last block
+- Therefore, the padding bytes all represent the number of bytes needed to fill the last block [1, 16]
+
+**The attack**
+The attack iterates over the numbers 2 - 16 and tries to pad the ciphertext with the padding based on the numbers. Thereby, it is possible to gather the set padding of the ciphertext and eliminate it right away. Now we get the ciphertext without the padding and can try to gather the plaintext. Therefore, the attacker again iterates over the numbers 1 - 16 in order to get the plaintext byte of the last byte. This process can now be repeated by the attacker for every block and byte in order to gather the whole plaintext.
 
 # Number Theory
 
