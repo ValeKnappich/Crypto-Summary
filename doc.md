@@ -102,8 +102,8 @@ Also with 1 plaintext-ciphertext pair (CPA), the key can be calculated as $k = x
 
 ### Substitution Cryptosystem
 
-Let $X$ be a non-empty finite set. A substitution cryptosystem over X is a tuple $(X, P_X, X, e, d)$ where $P_X$ is the set of all permutations of $X$.
-$$e(x, \pi) = \pi(x) \quad d(y, \pi) = \pi^{-1}(y) \quad \forall x,y \in X, \pi \in P_X$$
+Let $X$ be a non-empty finite set. A substitution cryptosystem over X is a tuple $(X, \mathcal{P}_X, X, e, d)$ where $\mathcal{P}_X$ is the set of all permutations of $X$.
+$$e(x, \pi) = \pi(x) \quad d(y, \pi) = \pi^{-1}(y) \quad \forall x,y \in X, \pi \in \mathcal{P}_X$$
 
 Substitution cryptosystems provide "perfect security" in scenario 2, but they are impractical because the substitution table ($\pi$) has a size of $2^l * l$.
 
@@ -354,12 +354,21 @@ It can also be used to calculate the number of generators in a cyclic group as $
 
 ## Euclids Algorithm
 
-\begin{minipage}{.3\linewidth}
 Algorithm to calculate the gcd. Can be extended to calculate the inverse of an element in $\mathbb{Z}_n^*$.
-\end{minipage}\hfill
+
 \begin{minipage}{.65\linewidth}
-    \includegraphics[width=\linewidth]{img/euclid}
-\end{minipage}
+\includegraphics[width=\linewidth]{img/euclid}
+\end{minipage}\hfill
+\Begin{minipage}{.3\linewidth}
+
+```python
+def gcd(a,b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+```  
+
+\End{minipage}
 
 ## Fast Exponentiation
 
@@ -445,10 +454,10 @@ As with symmetric encryption, the scheme is a tuple $\mathcal{S} = (X, Gen(1^\et
 
 ## Asymmetric CPA-Security
 
-\begin{minipage}{.45\linewidth}
+\begin{minipage}{.65\linewidth}
 The security game is defined analogously to symmetric encryption. The key is now a tuple and the adversary knows the public key. Advantage, success and failure are defined as for Block Ciphers.
 \end{minipage}\hfill
-\begin{minipage}{.45\linewidth}
+\begin{minipage}{.3\linewidth}
 \includegraphics[width=\linewidth]{img/acpa}
 \end{minipage}
 
@@ -473,7 +482,7 @@ It has not been proven, that the RSA encryption cannot be inverted. An algorithm
 
 $|Adv^{RSA}_{I,S}(\eta)| = Pr[\mathbb{E}^{RSA}_{I,S}(1^\eta) = 1]$
 \end{minipage}\hfill
-\begin{minipage}{.35\linewidth}
+\begin{minipage}{.3\linewidth}
 \includegraphics[width=\linewidth]{img/rsa}
 \end{minipage}
 
