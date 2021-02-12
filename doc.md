@@ -11,8 +11,11 @@ lang: en
 header-includes: |
     \usepackage{graphicx}
 
+    \newcommand\dummy[1]{#1}
     \let\Begin\begin
     \let\End\end
+    \newcommand{\colEnd}[0]{\End{minipage}}
+    \newcommand{\colBegin}[2][]{\dummy{\Begin{minipage}[#1]{#2\linewidth}}}
 
     \usepackage{setspace}
     \onehalfspace  
@@ -64,18 +67,21 @@ A cryptosystem with key distribution $\mathcal{V} = \mathcal{S}[P_k]$  provides 
 **Example Proof**:
 
 We need to show the criteria above for all plaintext distributions $P_X$. Therefore we use variable probabilities for the plaintexts $P_X(a) = p, P_X(b) = 1-p$ (for 2 plaintexts, else $p_1, ..., p_n$).
-\begin{minipage}{.35\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/perfect_secrecy_example}
-\end{minipage}
-\begin{minipage}{.63\linewidth}
-    \begin{align*}
-        P(a | A) &= \frac{P(a, A)}{P(A)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
-        P(a | B) &= \frac{P(a, B)}{P(B)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
-        P(b | A) &= \frac{P(b, A)}{P(A)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)\\
-        P(b | B) &= \frac{P(b, B)}{P(B)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)
-    \end{align*}
-\end{minipage}
+
+\colBegin{.35}
+
+![](img/perfect_secrecy_example.png){ width=100% }
+
+\colEnd\hfill\colBegin{.63}
+
+\begin{align*}
+    P(a | A) &= \frac{P(a, A)}{P(A)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
+    P(a | B) &= \frac{P(a, B)}{P(B)} &= \frac{\frac{1}{2} * p}{\frac{1}{2} * p + \frac{1}{2} * (1-p)} &= p = P(a)\\
+    P(b | A) &= \frac{P(b, A)}{P(A)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)\\
+    P(b | B) &= \frac{P(b, B)}{P(B)} &= \frac{\frac{1}{2} * (1-p)}{\frac{1}{2} * (1-p) + \frac{1}{2} * p} &= 1-p = P(b)
+\end{align*}
+
+\colEnd
 \newline
 
 **Theorem**: 
@@ -124,12 +130,15 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 
 **General Principle**: Over $r$ rounds, (round) key additions, word substitutions and bit permutations are applied, including an initial step that just applies key addition and shortened last round without bit permutation.
 
-\begin{minipage}{.6\linewidth}
-    \includegraphics[width=\linewidth]{img/spcs}
-\end{minipage}
-\begin{minipage}{.35\linewidth}
-    \includegraphics[width=\linewidth]{img/spcs_vis}
-\end{minipage}
+\colBegin{.6}
+
+![](img/spcs.png){ width=100% }
+
+\colEnd\hfill\colBegin{.35}
+
+![](img/spcs_vis.png){ width=100% }
+
+\colEnd
 
 **Importance of S-Box**:
 
@@ -162,19 +171,18 @@ Without the bit permutation the words of the plaintext are encrypted independent
 
 ### Algorithmic Security of Block Ciphers
 
-\Begin{minipage}{.55\linewidth}
+\colBegin{.55}
 
 We consider a block cipher secure if it is almost as good as a substitution cryptosystem w.r.t. resource-bound adversaries.
 Therefore no adversary $U$ should be able to distinguish BCS and SCS. Formally, we use the BCS for $b=1$ (real world) and the SCS for $b=0$ (random world) in the security game.
 
 The winning probability is $Pr[\mathbb{E}(1^n) = 1]$. Since a random guesser already has a probability of $0.5$, the advantage is normalized.
 
-\End{minipage}\hfill
-\Begin{minipage}{.4\linewidth}
+\colEnd\hfill\colBegin{.4}
 
-![](img/BC_SG.png)
+![](img/BC_SG.png){ width=100% }
 
-\End{minipage}
+\colEnd
 
 \begin{align*}
     Adv_{U, B}(\eta) &= 2 * \bigg( Pr[\mathbb{E}_U^B(1^\eta) = 1] - \frac{1}{2} \bigg) \in [-1, 1]
@@ -220,11 +228,11 @@ A number generator (NG) is a dpt algorithm of the Form $G : (s: \{0,1\}^\eta) : 
 Defined like this:
 $U (1^\eta, x : \{1^\eta\}^{p(\eta)}):\{0,1\}$
 
-\Begin{minipage}{.4\linewidth}
+\colBegin{.4}
 
-![](img/prng-dist.png)
+![](img/prng-dist.png){ width=100% }
 
-\End{minipage}
+\colEnd\hfill\colBegin{.5}
 
 With an advantage of:
 \begin{align*}
@@ -234,58 +242,62 @@ With an advantage of:
     Adv_{U,G}(\eta) &= suc_{U,G}(\eta) - fail_{U,G}(\eta)\\
 \end{align*}
 
+\colEnd
 ### Encryption Schemes from Block Ciphers
 
 #### ECB Mode
 
 **Idea**: Split the message in blocks of constant length and encrypt each block under the given key using the underlying block cipher.
 
-\includegraphics[width=\linewidth]{img/ecb-mode}
+![](img/ecb-mode.png){ width=100% }
 
 **Security**: It's not secure, since the ciphertext carries non-trivial information about the plaintext: $\text{for } y = y_0 || y_1\text{, then } y_0 = y_1 \text{ if } x_0 = x_1$.
 
 #### CBC Mode
 
-\Begin{minipage}{.55\linewidth}
+\colBegin{.55}
 
 **Idea**: Add and initialization vector $v$ that is \texttt{xor}'ed with the plaintext before encrypting. That $v$ is part of the key. 
 \newline\newline
 **Problem**: Still deterministic, so every plaintext can be sent just once.
 
-\End{minipage}\hfill
-\begin{minipage}{.4\linewidth}
-    \includegraphics[width=\linewidth]{img/cbc-mode}
-\end{minipage}
+\colEnd\hfill\colBegin{.4}
+
+![](img/cbc-mode.png){ width=100% }
+
+\colEnd
 
 #### R-CBC Mode
 
-\Begin{minipage}{.55\linewidth}
+\colBegin{.55}
 
 **Idea**: To solve the issues of CBC-Mode, R-CBC moves the initialization vector $v$ out of the key and generates a random one while decryption. The vector is appended as first block of the ciphertext to enable decryption.
 \newline\newline
 **Security**: Its secure if the underlying block cipher is secure.
 
-\End{minipage}\hfill
-\begin{minipage}{.4\linewidth}
-    \includegraphics[width=\linewidth]{img/rcbc-mode}
-\end{minipage}
+\colEnd\hfill\colBegin{.4}
+
+![](img/rcbc-mode.png){ width=100% }
+
+\colEnd
 
 #### R-CTR Mode
 
-\Begin{minipage}{.55\linewidth}
+\colBegin{.55}
 
 **Idea**: Alternative to R-CBC. Generate a random number $r$ (comparable to $v$ of R-CBC), encrypt this random number under the key and xor it with the plaintext. The counter is increased by 1 for each block. The counter $r$ is appended as first block of $y$ to enable decryption.
 \newline\newline
 **Security**: Its secure if the underlying block cipher is secure.
 
-\End{minipage}\hfill
-\begin{minipage}{.4\linewidth}
-    \includegraphics[width=\linewidth]{img/rctr-mode}
-\end{minipage}
+\colEnd\hfill\colBegin{.4}
+
+![](img/rctr-mode.png){ width=100% }
+
+\colEnd
 
 ### CPA-Security
 
-\Begin{minipage}{.62\linewidth}
+\colBegin{.62}
 
 **CPA**: Chosen-Plaintext-Attack
 \newline\newline
@@ -293,15 +305,16 @@ With an advantage of:
 \newline\newline
 Advantage, success and failure are defined as for block ciphers.
 
-\End{minipage}\hfill
-\begin{minipage}{.35\linewidth}
-    \includegraphics[width=\linewidth]{img/cpa}
-\end{minipage}
+\colEnd\hfill\colBegin{.35}
+
+![](img/cpa.png){ width=100% }
+
+\colEnd
 
 
 ### CCA-Security
 
-\Begin{minipage}{.62\linewidth}
+\colBegin{.62}
 
 **CCA**: Chosen-Ciphertext-Attack
 \newline\newline
@@ -309,14 +322,16 @@ Advantage, success and failure are defined as for block ciphers.
 \newline\newline
 Advantage, success and failure are defined as for block ciphers.
 
-\End{minipage}\hfill
-\begin{minipage}{.35\linewidth}
-    \includegraphics[width=\linewidth]{img/cpa}
-\end{minipage}
+\colEnd\hfill\colBegin{.35}
+
+![](img/cpa.png){ width=100% }
+
+\colEnd
 
 ### Vaudenay's Padding Attack
 
 **Preconditions**
+
 - The Vaudenay's attack is based on the fact, that the adversary might have a padding oracle
 - This padding oracle gives him information if the set padding is correct or not
 - In reality this can be a server error, delayed answer from server or any feedback from the decryption algorithm.
@@ -324,6 +339,7 @@ Advantage, success and failure are defined as for block ciphers.
 - Therefore, the padding bytes all represent the number of bytes needed to fill the last block [1, 16]
 
 **The attack**
+
 The attack iterates over the numbers 2 - 16 and tries to pad the ciphertext with the padding based on the numbers. Thereby, it is possible to gather the set padding of the ciphertext and eliminate it right away. Now we get the ciphertext without the padding and can try to gather the plaintext. Therefore, the attacker again iterates over the numbers 1 - 16 in order to get the plaintext byte of the last byte. This process can now be repeated by the attacker for every block and byte in order to gather the whole plaintext.
 
 # Number Theory
@@ -331,7 +347,7 @@ The attack iterates over the numbers 2 - 16 and tries to pad the ciphertext with
 ## Fundamental Theorem of Arithmetic
 
 Every natural number $n \in \mathbb{N}, n \geq 2$ has exactly one combination of prime factors.
-$$n = p_1 * \dots * p_k \quad \text{with} k \leq log(n)$$ 
+$$n = p_1 \cdot \dots \cdot p_k \quad \text{with} k \leq log(n)$$ 
 
 ## Modulo
 
@@ -341,7 +357,7 @@ $$a \text{ div } n := q  \quad\quad\text{and}\quad\quad a \text{ mod } n := r$$
 ## $\mathbb{Z}_n$
 
 Let $n \geq 1$. We define the set $\mathbb{Z}_n := \{0, \dots, n-1\}$ of remainders of divisions by $n$. Let $a,b \in \mathbb{Z}_n$, then 
-$$a +_n b := (a + b) \text{ mod } n \quad\quad\text{and}\quad\quad a *_n b := (a * b) \text{ mod } n$$
+$$a +_n b := (a + b) \text{ mod } n \quad\quad\text{and}\quad\quad a \cdot_n b := (a \cdot b) \text{ mod } n$$
 
 ## Group
 
@@ -379,10 +395,11 @@ It can also be used to calculate the number of generators in a cyclic group as $
 
 Algorithm to calculate the gcd. Can be extended to calculate the inverse of an element in $\mathbb{Z}_n^*$.
 
-\begin{minipage}{.65\linewidth}
-\includegraphics[width=\linewidth]{img/euclid}
-\end{minipage}\hfill
-\Begin{minipage}{.3\linewidth}
+\colBegin{.65}
+
+![](img/euclid.png){ width=100% }
+
+\colEnd\hfill\colBegin{.3}
 
 ```python
 def gcd(a,b):
@@ -391,11 +408,11 @@ def gcd(a,b):
     return a
 ```  
 
-\End{minipage}
+\colEnd
 
 ## Fast Exponentiation
 
-\Begin{minipage}{.7\linewidth}
+\colBegin{.7}
 
 Algorithm to efficiently compute the exponentiation of a group element. Let $\mathcal{G}$ be a group and $g \in \mathcal{G}, m \in \mathbb{N}$. It uses the fact, that $g^{2k} = (g^k)^2$. Instead of doing $2k$ multiplications, we can do $k + 1$. This is applied recursively to minimize the number of exponentiations that need to be computed. To make the algorithm work with any $k$ (not just powers of $2$), we use the binary representation of the exponent, e.g.
 $$13 = 2^0 + 2^2 + 2^3 = (1101)_2 \quad \Rightarrow \quad g^{13} = g^{2^0} \cdot g^{2^2} \cdot g^{2^3}$$
@@ -404,10 +421,11 @@ To compute $g^m$, the algorithm iterates over the bits of $m$. If the bit is one
 
 The algorithm has a complexity of $\mathcal{O}(log(m))$.
 
-\End{minipage}\hfill
-\begin{minipage}{.25\linewidth}
-\includegraphics[width=\linewidth]{img/fast_exp}
-\end{minipage}
+\colEnd\hfill\colBegin{.25}
+
+![](img/fast_exp.png){ width=100% }
+
+\colEnd
 
 ## Cyclic Groups
 
@@ -441,12 +459,15 @@ We find generators for a group by guessing a group element and checking whether 
 $$g^{n/p} \neq 1 \quad \forall \quad p \in P \text{ (prime factors of $n$) and } n = |\mathcal{G}|$$
 
 
-\begin{minipage}{.35\linewidth}
-\includegraphics[width=\linewidth]{img/gen_find}
-\end{minipage}\hfill
-\begin{minipage}{.6\linewidth}
-\includegraphics[width=\linewidth]{img/gen_test}
-\end{minipage}
+\colBegin{.4}
+
+![](img/gen_find.png){ width=100% }
+
+\colEnd\hfill\colBegin{.6}
+
+![](img/gen_test.png){ width=100% }
+
+\colEnd
 
 This only works, because the probability of finding a generator when randomly sampling is relatively high, concretely it is upper-bounded by $Pr[\langle X_g \rangle = \mathcal{G}] \geq \frac{1}{1+log(n)} \text{ with } X_g \sample \mathcal{G}$.
 
@@ -477,12 +498,15 @@ As with symmetric encryption, the scheme is a tuple $\mathcal{S} = (X, Gen(1^\et
 
 ## Asymmetric CPA-Security
 
-\begin{minipage}{.65\linewidth}
+\colBegin{.65}
+
 The security game is defined analogously to symmetric encryption. The key is now a tuple and the adversary knows the public key. Advantage, success and failure are defined as for Block Ciphers.
-\end{minipage}\hfill
-\begin{minipage}{.3\linewidth}
-\includegraphics[width=\linewidth]{img/acpa}
-\end{minipage}
+
+\colEnd\hfill\colBegin{.3}
+
+![](img/acpa.png){ width=100% }
+
+\colEnd
 
 ## RSA
 
@@ -500,14 +524,16 @@ k = ((n,e), (n,d))
 - $D(y, (n,d)) = y^d \mod n$
 
 
-\begin{minipage}{.55\linewidth}
+\colBegin{.55}
 It has not been proven, that the RSA encryption cannot be inverted. An algorithm that attempts that is called inverter $I$. The advantage is assumed to be negligible, which is called RSA-Assumption.
 
 $|Adv^{RSA}_{I,S}(\eta)| = Pr[\mathbb{E}^{RSA}_{I,S}(1^\eta) = 1]$
-\end{minipage}\hfill
-\begin{minipage}{.3\linewidth}
-\includegraphics[width=\linewidth]{img/rsa}
-\end{minipage}
+
+\colEnd\hfill\colBegin{.3}
+
+![](img/rsa.png){ width=100% }
+
+\colEnd
 
 
 Since the encryption function is deterministic, this textbook RSA is not secure. The scheme can be modified to be secure, by adding randomness. E.g. PKCS#1 v1.5 defines a random padding that fixes that issue: $$0^{14} || 10 || r || 0^8 || x$$
@@ -524,11 +550,14 @@ The ElGamal is an asymmetric encryption scheme that builds on the fact that it i
 
 Formally:
 
-\begin{minipage}{.4\linewidth}
+\colBegin{.4}
+
 \centering
-\includegraphics[width=.7\linewidth]{img/el_gamal_e}
-\end{minipage}\hfill
-\begin{minipage}{.55\linewidth}
+![](img/el_gamal_e.png){ width=70% }
+
+\colEnd\hfill\colBegin{.55}
+
 \centering
-\includegraphics[width=.7\linewidth]{img/el_gamal_d}
-\end{minipage}
+![](img/el_gamal_d.png){ width=70% }
+
+\colEnd
