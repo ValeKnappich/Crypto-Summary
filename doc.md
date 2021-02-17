@@ -2,12 +2,18 @@
 geometry: margin=1in
 numbersections: true
 title: "Introduction to Modern Cryptography Summary"
-subtitle: WS20/21
+subtitle: "WS20/21"
 documentclass: scrartcl
+toc-depth: 2
+toc: true
 author:
 - Valentin Knappich 
 date: \today{}
 lang: en
+include-before: |
+    \begin{centering}
+    \textbf{Disclaimer:} This document was created for exam preparation and has not been corrected by any of the lecturers/tutors. Therefore there is no guarantee for the correctness and/or comprehensiveness of the content.
+    \end{centering}
 header-includes: |
     \usepackage{graphicx}
 
@@ -26,7 +32,6 @@ header-includes: |
     \newcommand{\sample}{\overset{\$}{\leftarrow}}
 ---
 
-\tableofcontents
 \newpage
 
 # Symmetric encryption
@@ -104,7 +109,7 @@ Let $\mathcal{V} = \mathcal{S}[P_k]$ be a cryptosystem with key distribution $P_
 Vernam is not a secure cryptosystem anymore, since from 2 ciphertexts, Eve can learn non-trivial information about the plaintexts:
 $$y_0 \oplus y_1 = x_0 \oplus k \oplus x_1 \oplus k = x_0 \oplus x_1$$
 
-Also with 1 plaintext-ciphertext pair (CPA), the key can be calculated as $k = x \oplus y$.
+Also with 1 plaintext-ciphertext pair, the key can be calculated as $k = x \oplus y$.
 
 ### Substitution Cryptosystem
 
@@ -128,7 +133,7 @@ $\bigg(\{0,1\}^{l(\eta)}_{\eta \in \mathbb{N}},\; Gen(1^\eta),\; \{0,1\}^{l(\eta
 - $[r] = \{0, 1, ..., r-1\}$
 - $\beta \in \mathcal{P}_{[l]}$, then $x^\beta(i) = x(\beta(i))$
 
-**General Principle**: Over $r$ rounds, (round) key additions, word substitutions and bit permutations are applied, including an initial step that just applies key addition and shortened last round without bit permutation.
+**General Principle**: Over $r$ rounds, (round) key additions, word substitutions and bit permutations are applied, including an initial step that just applies key addition and a shortened last round without bit permutation.
 
 \colBegin{.6}
 
@@ -146,26 +151,16 @@ Without the S-Box the SPCS is a linear sequence of key additions and since the p
 
 **Importance of bit permutation**:
 
-Without the bit permutation the words of the plaintext are encrypted independent of eachother and an adversary is able to construct two plaintexts with equal words at the ending. Since is reveals some non-trivial information to the adversary, by leaking information of some words of the plaintext, the system would be insecure. The advantage of the adversary is given by $adv(U,B) = succ(U, B) - fail(U, B) = 1 - \frac{1}{2^n}$.
-
-**Known Attacks**:
-
-- Brute Force Attack
-- Linear Cryptanalysis
-- Differential Cryptanalysis
+Without the bit permutation the words of the plaintext are encrypted independently of each other and an adversary is able to construct two plaintexts with equal words at the end. Since this reveals some non-trivial information to the adversary, by leaking information of some words of the plaintext, the system would be insecure. The advantage of the adversary is given by $adv(U,B) = succ(U, B) - fail(U, B) = 1 - \frac{1}{2^n}$.
 
 **Linear Cryptanalysis**:
 
 - Relies on a set $T$ of plaintext-ciphertext pairs
 - Instead of brute forcing the whole key, get small parts of the key at a time
 - Exploit linear dependencies
- - This can be found through the orientation
- - The goal is to gather the best orientation by going through every step
- - The parts are
-  - Parallel composition
-  - Bit permutation
-  - Key addition
-  - Sequential composition
+    - This can be found through the orientation
+    - The goal is to gather the best orientation by going through every step
+    - The parts are Parallel composition, Bit permutation, Key addition, Sequential composition
 
 **AES (Advanced encryption standard)**: basically SPCS with modifications
 
@@ -205,7 +200,7 @@ $$|Adv^{PRP}_{U,B}(\eta) - Adv^{PRF}_{U,B}(\eta)| \leq \frac{q(\eta)^2}{2^{l(\et
 
 ### Symmetric Encryption Scheme
 
-A symmetric encryption scheme is a tuple $S = (Gen(^\eta), E, D)$ with 
+A symmetric encryption scheme is a tuple $S = (Gen(1^\eta), E, D)$ with 
 
 - security parameter $\eta$
 - ppt key generation algorithm $Gen(1^\eta)$
@@ -213,7 +208,7 @@ A symmetric encryption scheme is a tuple $S = (Gen(^\eta), E, D)$ with
 - dpt decryption algorithm $D(y: \{0,1\}^*, k: K) : \{0,1\}^*$
 - and $D(E(x, k), k) = x$
 
-E cannot be deterministic, because else we wouldn't be able to send the same message multiple times, i.e. the same plaintext encrypted under the same key should result in a different ciphertext (with a high probability).
+$E$ cannot be deterministic, because else we wouldn't be able to send the same message multiple times, i.e. the same plaintext encrypted under the same key should result in a different ciphertext (with a high probability).
 
 ### Encryption Schemes from Stream Ciphers
 
@@ -221,7 +216,7 @@ E cannot be deterministic, because else we wouldn't be able to send the same mes
 
 #### Number generator
 
-A number generator (NG) is a dpt algorithm of the Form $G : (s: \{0,1\}^\eta) : \{0,1\}^{p(\eta)}$ where $p$ is the expansion factor.
+A number generator (NG) is a dpt algorithm of the Form $G(s: \{0,1\}^\eta) : \{0,1\}^{p(\eta)}$ where $p$ is the expansion factor.
 
 ### PRNG-Distinguisher
 
@@ -324,7 +319,7 @@ Advantage, success and failure are defined as for block ciphers.
 
 \colEnd\hfill\colBegin{.35}
 
-![](img/cpa.png){ width=100% }
+![](img/cca.png){ width=100% }
 
 \colEnd
 
@@ -561,6 +556,160 @@ Formally:
 ![](img/el_gamal_d.png){ width=70% }
 
 \colEnd
+
+# Hashes
+
+Secure encryption schemes provide confidentiality, but no integrity. Among other things, this is what MACs and Signature Schemes aim for in the symmetric and asymmetric case respectively.
+
+## Cryptographic Hash Function and Compression Function Definition
+
+Let $\eta \in \mathbb{N}$, $l: \mathbb{N} \rightarrow \mathbb{N}$. A Cryptographic Hash function is a tuple $\mathcal{H} = (Gen(1^\eta), h)$ with a key generation algorithm and a (ppt) hash algorithm $$h(k: K, x: \{0,1\}^*) : \{0,1\}^{l(\eta)}$$.
+We call this hash function Compression Function if $h$ is only defined for inputs $x \in \{0,1\}^{l'(\eta)}$ with $l'(\eta) > l(\eta)$.
+
+## Security of Hash Functions
+
+Hash Functions can fulfill different security notions. 
+
+- Collision resistance: No adversary can find 2 different strings with the same hash value.
+- Target-collision resistance: Given a string, no adversary can find a second string with the same hash value.
+- Preimage resistance: Given a hash value, no adversary can find a string with the same hash value.
+
+\colBegin{.55}
+
+For cryptographic hash functions one usually aims for collision resistance. Note that unlike encryption functions hash functions normally use a public key. Therefore a collision finder is a ppt algorithm \newline$A(1^\eta, k: K) : \{0,1\}^* \times \{0,1\}^*$. The security game does not have a shortened version and the advantage is not normalized $Adv_{A, \mathbb{H}}^{Coll} = Pr[\mathbb{E}^{Coll}_{A, \mathbb{H}}(1^\eta) = 1]$.
+
+\colEnd\hfill\colBegin{.4}
+
+![](img/hash_game.png){ width=100% }
+
+\colEnd
+
+## Merkle Damgard Transform
+
+Instead of defining a hash function directly on arbitrary input values, it is easier to design a collision resistant compression function $h'(k: K, x: \{0,1\}^{2\eta}) : \{0,1\}^\eta$. The Merkle Damgard transform pads the input and applies the compression function recursively. The resulting hash function is collision resistant if the underlying compression function is collision resistant.
+
+# MACs
+## Message Authentication Code (MAC) Definition
+
+A MAC is the tuple $\mathcal{M} = (Gen(1^\eta), T, V)$ with 
+
+- key generation algorithm $Gen(1^\eta)$
+- tag generation algorithm $T(x: \{0,1\}^*, k: K) : \{0,1\}^{l(\eta)}$
+- verification algorithm $V(x \in \{0,1\}^*, t \in \{0,1\}^{l(\eta)}, k: K) : \{valid, unvalid\}$
+
+such that $\forall x \in X, k \in K : V(x, T(x,k), k) = valid$
+
+## MAC security
+
+\colBegin{.55}
+
+A MAC is considered unforgeable if an adversary cannot compute a valid message-tag pair without knowing the key, even provided an oracle. The advantage is not normalized $Adv_{A, \mathcal{M}}^{MAC}(\eta) = Pr[\mathbb{E}_{A, \mathcal{M}}^{MAC}(1^\eta) = 1]$.
+
+\colEnd\hfill\colBegin{.3}
+
+\centering
+![](img/mac_game.png){ width=100% }
+
+\colEnd
+
+## MAC construction
+
+### MAC from Blockcipher 
+
+Let $\mathcal{B} = (\{0,1\}^{l(\eta)}, Gen(1^\eta), \{0,1\}^{l(\eta)}, E, D)$ be a blockcipher. Then $\mathcal{M}_\mathcal{B} = (Gen(1^\eta), T, V)$ is a MAC with $T(x, k) = E(x, k)$. It is unforgeable if the underlying block cipher is secure, but it works only for inputs of length $l(\eta)$, because $((x_1 || x_2), (F(x_1) || F(x_2)))$ is a valid message-tag pair.
+
+To apply the principle to messages of length multiple of $l$, one can use the CBC scheme known from symmetric encryption. Then the MAC is unforgeable if the block cipher is secure and it is only used on messages of the same length. To overcome this limitation, one can use different modifications. One possibility is to apply CBC-MAC to the tag a second time.
+
+### Hash-and-MAC
+
+First hash the plaintext to obtain a message of constant length and then MAC the result. Let $\eta \in \mathbb{N}$, $\mathcal{H} = (Gen(1^\eta), h)$ be a hash function and $\mathcal{M} = (Gen_\mathcal{M}(1^\eta), T)$ be a MAC. Then $$HashMAC[\mathcal{H}, \mathcal{M}] = (Gen_{\mathcal{H}, \mathcal{M}}, T') \text{    with    } T'(x, (k_\mathcal{H}, k_\mathcal{M})) = T(h_{k_\mathcal{H}}(x), k_\mathcal{M})$$ The scheme is secure if $\mathcal{H}$ is collision resistant and $\mathcal{M}$ is a secure MAC.
+
+
+### HMAC
+
+HMAC constructs a MAC using only hash functions and no encryption. First, the algorithm creates an inner and an outer key by XOR'ing the (padded) key with a special constant respectively. The plaintext and the inner key are then concatenated and hashed. The result is concatenated with the outer key and hashed again. $$t = h(k_o || h(k_i || x))$$
+
+
+## Authenticated Encryption and CCA-secure symmetric encryption
+
+Combining confidentiality and integrity is an important requirement for real-world applications. It can be accomplished trough authenticated encryption schemes, that imply CCA-Security. 
+
+**Insecure approaches**:
+
+- Encrypt-and-MAC: Sending the ciphertext and the tag (in plaintext) is not secure, since MACs don't provide confidentiality and an adversary might get information about the plaintext.
+- MAC-then-Encrypt: Encrypting the concatenation of the plaintext and the tag is not secure either, since the MAC only protects the integrity of the plaintext, not the ciphertext. Therefore padding attacks are still possible.
+
+**Encrypt-then-MAC**:
+
+- First encrypt, then tag the ciphertext. Send both ciphertext and tag
+- Is secure if the encryption scheme and the MAC are (CPA) secure
+- CCA-security: Attackers cannot use the decryption oracle, because he doesn't know $k_\mathcal{M}$ and therefore cannot create generate valid ciphertexts.
+
+**Special constructions**:
+
+One can also create special constructions that provide authenticated encryption directly. An example is the GCM mode for block ciphers, which is used in TLS.
+
+
+# Signatures
+## Digital Signature Scheme Definition
+
+A digital signature scheme is a tuple of the form $\mathcal{S} = (X, Gen(1^\eta), T, V)$ with 
+
+- ppt key generation algorithm that outputs a public-private-key pair $(k, \hat{k})$.
+- domain $X = (X_k)_{k \in K_{pub}}$
+- tagging algorithm $T(x: X_k, \hat{k}: K_{priv}): \{0,1\}^{l(\eta)}$
+- verification algorithm $V(x: X_k, s \in \{0,1\}^{l(\eta)}, k: K_{pub}) : \{valid, unvalid\}$
+
+such that $\forall (k, \hat{k}) \in K, x \in X_k : V(x, T(x, \hat{k}), k) = valid$
+
+## Digital Signature Security
+
+\colBegin{.6}
+
+A signature scheme is called secure, if no adversary can compute a valid message-tag pair provided the public key and a signing oracle. There is no shortened game and the advantage is not normalized: $Adv_{A, \mathcal{S}}^{Sig} = Pr[\mathbb{E}^{Sig}_{A, \mathcal{S}}(1^\eta) = 1]$.
+
+\colEnd\hfill\colBegin{.35}
+
+![](img/signature_game.png)
+
+\colEnd
+
+## Hash-and-Sign
+
+Let $n in \mathbb{N}, \mathcal{H} = (Gen_\mathcal{H}(1^\eta), h)$ be a hash function and $\mathcal{S} = (X, Gen_\mathcal{S}(1^\eta), T, V)$ be a signature scheme. Then $HashSign[\mathcal{H}, \mathcal{S}] = (X, Gen_{\mathcal{S}, \mathcal{H}}(1^\eta), T', V')$ with 
+
+\colBegin{.3}
+
+![](img/hashnsign_gen.png){ width=100% }
+
+\colEnd\hfill\colBegin{.27}
+
+![](img/hashnsign_tag.png){ width=100% }
+
+\colEnd\hfill\colBegin{.33}
+
+![](img/hashnsign_verify.png){ width=100% }
+
+\colEnd
+
+It is secure if it is based on a secure hash and a secure signature scheme. Anyway one needs a secure signature scheme to construct Hash-and-Sign schemes. Also the resulting schemes are often impractical.
+
+## Random Oracle
+
+A random oracle returns a random value of fixed length for messages and caches the results so that the same message leads to the same return value. It can be seen as an ideal hash function with optimal collision resistance. Random oracles are probably impossible to implement, but the assumption enables the construction of efficient cryptosystems like encryption, signature and MAC schemes.
+
+## FDH-RSA
+
+FDH-RSA implements a Hash-and-Sign scheme with a random oracle as hash function and RSA as signature scheme. For RSA, the only difference to encryption is that the private key is used for signing/encrypting and the public key for verification/decryption. In practice one uses a secure hash function like SHA256 instead of the random oracle.
+
+Let $n \in \mathbb{N}$ and $l: \mathbb{N} \rightarrow \mathbb{N}$ be a polynomial and $H^{\{0,1\}^*}_{\mathbb{Z}_n}$ be a random oracle. $FDH-RSA = (X, Gen(1^\eta), T, V)$ with
+
+- $Gen(1^\eta)$ keygen as with RSA
+- $X = \{0,1\}^*$
+- $T(x, (n,d)) = (H^X_{\mathbb{Z}_n}(x))^d \mod n$
+- $V(x, s, (n,e)) = \begin{cases}valid & \text{if } s^e \mod n = H^X_{\mathbb{Z}_n}(x)\\ invalid & \text{else} \end{cases}$
+
+The resulting scheme is secure, even though the RSA signature scheme is not by itself. The security holds under the RSA assumption in the Random Oracle Model (ROM).
 
 # Cheatsheet - 4 Gewinnt
 
