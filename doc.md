@@ -537,9 +537,10 @@ While this is assumed to be sufficient for CPA-Security, RSA does not hold CCA-S
 
 ## ElGamal
 
-The ElGamal is an asymmetric encryption scheme that builds on the fact that it is hard to get $g^{ab}$ from $g^a$ and $g^b$, but easy to get from either $g^a$ and $b$ or $g^b$ and $a$.
+The ElGamal is an asymmetric encryption scheme $\mathcal{S}_{ElGamal} = (X, Gen(1^\eta), E, D)$ that builds on the fact that it is hard to get $g^{ab}$ from $g^a$ and $g^b$, but easy to get from either $g^a$ and $b$ or $g^b$ and $a$.
 
-- The keygen algorithm randomly selects a $b \in \{0, \dots, n-1\}$, where $(\mathcal{G}, n, g)$ is the output of the GroupGen algorithm. The output is the public key $(\mathcal{G}, n, g, g^b)$ and the private key $(\mathcal{G}, n, g, b)$. In a real scenario this represents the keypair of the receiving person.
+- The GroupGen algorithm obtains a group, its order and a generator $(\mathcal{G}, n, g)$. The keygen algorithm randomly selects $b \in \{0, \dots, n-1\}$. The output is the public key $(\mathcal{G}, n, g, g^b)$ and the private key $(\mathcal{G}, n, g, b)$. In a real scenario this represents the keypair of the receiving person.
+- The plaintexts are interpreted as group elements, $X = \{\mathcal{G}\}$
 - The encryption function obtains another private key $a$ randomly and calculates the public key $g^a$. In practice, this is the senders keypair. $E$ encrypts the plaintext $x$ by calculating $x \cdot (g^b)^a$
 - The decryption function takes the senders public key, exponentiates it with the receivers private key and inverts the result to obtain $((g^a)^b)^{-1}$. This can be used to calculate the plaintext as $y \cdot ((g^a)^b)^{-1} = x \cdot (g^b)^a \cdot ((g^a)^b)^{-1} = x$.
 
